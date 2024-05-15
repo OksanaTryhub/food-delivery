@@ -20,12 +20,12 @@ const FoodItem = ({ id, name, price, description, image }) => {
         {!cartItems[id] ? (
           <div
             onClick={() => addToCart(id)}
-            className='absolute bottom-4 right-4 p-4 bg-light-1 rounded-full cursor-pointer z-50'
+            className='absolute bottom-4 right-4 p-4 bg-light-1 rounded-full cursor-pointer z-30'
           >
             <FaPlus />
           </div>
         ) : (
-          <div className='absolute bottom-4 right-4 flex items-center gap-2 p-1 bg-white rounded-full  z-50'>
+          <div className='absolute bottom-4 right-4 flex items-center gap-2 p-1 bg-white rounded-full  z-30'>
             <div
               onClick={() => reduceItemQuantity(id)}
               className=' p-3 bg-red-100  text-red-700 rounded-full  cursor-pointer'

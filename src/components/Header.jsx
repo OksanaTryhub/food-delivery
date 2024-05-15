@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaSearch, FaBars } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import logo from "../assets/images/logo.png";
 import LoginPopup from "./LoginPopup";
 import BurgerMenu from "./BurgerMenu";
+import { StoreContext } from "../context/StoreContext";
 
 const Header = () => {
   const [activeItem, setActiveItem] = useState("home");
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showBurger, setShowBurger] = useState(false);
   const location = useLocation();
+  const { getTotalCartAmount, getTotalItemsQuantity } = useContext(StoreContext);
 
   const handleShowBurger = () => {
     setShowBurger(true);
@@ -23,7 +25,7 @@ const Header = () => {
   return (
     <>
       {showLoginPopup ? <LoginPopup isOpen={setShowLoginPopup} /> : ""}
-      <header className='flex bg-light-1 shadow-md'>
+      <header className='flex bg-light-1 shadow-md '>
         <div className='container flex items-center justify-between mx-auto p-3'>
           <div className='pl-4'>
             <Link to='/'>
@@ -78,13 +80,17 @@ const Header = () => {
               <Link to='/cart'>
                 <FaCartShopping className='text-2xl hover:text-accent-1' />
               </Link>
-              <div className='w-3 h-3 bg-accent-1 rounded-full -top-2 -right-2 absolute flex items-center justify-center text-[10px]'>
-                5
+              <div
+                className={`w-3 h-3 bg-accent-1 rounded-full -top-2 -right-2 absolute flex items-center justify-center text-[10px] ${
+                  getTotalCartAmount() === 0 && "hidden"
+                }`}
+              >
+                {getTotalItemsQuantity()}
               </div>
             </div>
             <button
               onClick={handleShowLoginPopup}
-              className='hidden md:flex px-6 py-2 border rounded-full hover:border-accent-1 transition-colors duration-300 ease-in-out'
+              className='hidden md:flex px-6 py-2 bg-white border rounded-full hover:border-accent-1 transition-colors duration-300 ease-in-out'
             >
               Sign In
             </button>

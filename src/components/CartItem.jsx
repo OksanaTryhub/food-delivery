@@ -2,12 +2,23 @@ import { FaTrashCan } from "react-icons/fa6";
 import PropTypes from "prop-types";
 import { FaMinus, FaPlus } from "react-icons/fa";
 
-const CartItem = ({ image, name, price, quantity, total, removeItem, reduceItem, addItem }) => {
+const CartItem = ({
+  image,
+  name,
+  price,
+  quantity,
+  total,
+  removeItem,
+  reduceItem,
+  addItem,
+  className,
+}) => {
   return (
-    <div className='grid grid-cols-cartItem items-center p-3'>
-      <img src={image} alt='Food image' className='w-[50px] rounded-md' />
-      <p>{name}</p>
-      <p className='text-center'>${price}</p>
+    <div className={`grid grid-cols-cartItem grid-rows-1 items-center gap-1 p-3 ${className}`}>
+      <img src={image} alt='Food image' className='row-span-1 w-[80px] rounded-md' />
+      <p className='row-span-1 col-span-1 '>{name}</p>
+
+      <p className=' text-center'>${price}</p>
       <div className=' flex items-center justify-center gap-2 p-1 '>
         <div
           onClick={reduceItem}
@@ -23,9 +34,10 @@ const CartItem = ({ image, name, price, quantity, total, removeItem, reduceItem,
           <FaPlus />
         </div>
       </div>
-      <p className='text-center'>${total}</p>
+
+      <p className=' text-center'>${total}</p>
       <button
-        className='flex hover:text-accent-1 cursor-pointer justify-center '
+        className=' flex hover:text-accent-1 cursor-pointer justify-center '
         onClick={removeItem}
       >
         <FaTrashCan />
@@ -44,6 +56,7 @@ CartItem.propTypes = {
   removeItem: PropTypes.func.isRequired,
   reduceItem: PropTypes.func.isRequired,
   addItem: PropTypes.func.isRequired,
+  className: PropTypes.string,
 };
 
 export default CartItem;

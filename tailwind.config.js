@@ -37,6 +37,7 @@ export default {
         footer: "2fr 1fr 1fr",
         custom: "repeat(auto-fill, minmax(240px, 1fr))",
         cartItem: "1fr 1.5fr 1fr 1fr 1fr 0.5fr",
+        cartItemXS: "1fr 1.5fr 1fr ",
       },
     },
   },

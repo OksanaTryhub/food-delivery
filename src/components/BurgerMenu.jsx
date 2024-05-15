@@ -8,6 +8,7 @@ const BurgerMenu = ({ isOpen }) => {
   const handleShowLoginPopup = () => {
     console.log("CLICK on SIGN In button");
   };
+
   return (
     <Modal
       bgClassName=''

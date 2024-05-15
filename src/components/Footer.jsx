@@ -33,25 +33,25 @@ const Footer = () => {
           </div>
 
           <div className='flex flex-col px-3 md:pl-8 '>
-            <h2 className='text-lg font-bold mb-4'>COMPANY</h2>
+            <h2 className='text-lg font-medium mb-4'>COMPANY</h2>
             <ul className='flex flex-col gap-1 sm:gap-2 text-sm md:text-base'>
-              <li className='cursor-pointer hover:text-accent-1'>Home</li>
-              <li className='cursor-pointer hover:text-accent-1'>About us</li>
-              <li className='cursor-pointer hover:text-accent-1'>Delivery</li>
-              <li className='cursor-pointer hover:text-accent-1'>Privacy policy</li>
+              <li className='cursor-pointer text-sm hover:text-accent-1'>Home</li>
+              <li className='cursor-pointer text-sm hover:text-accent-1'>About us</li>
+              <li className='cursor-pointer text-sm hover:text-accent-1'>Delivery</li>
+              <li className='cursor-pointer text-sm hover:text-accent-1'>Privacy policy</li>
             </ul>
           </div>
 
           <div className='flex flex-col gap-4 px-3 md:pl-8'>
-            <h2 className='text-lg font-bold '>GET IN TOUCH</h2>
+            <h2 className='text-lg font-medium '>GET IN TOUCH</h2>
             <ul className='flex flex-col gap-1 sm:gap-2 text-sm md:text-base'>
-              <li className='cursor-pointer group'>
+              <li className='cursor-pointer text-sm group'>
                 <a href='tel:+380974173310' className='flex gap-2 items-center'>
-                  <FaPhone className='text-base group-hover:text-accent-1' />
+                  <FaPhone className='text-sm group-hover:text-accent-1' />
                   +38-097-417-33-10
                 </a>
               </li>
-              <li className='cursor-pointer group'>
+              <li className='cursor-pointer text-sm group'>
                 <a
                   href='https://t.me/mlle_soleil'
                   target='_blank'
@@ -62,7 +62,7 @@ const Footer = () => {
                   @mlle_soleil
                 </a>
               </li>
-              <li className='cursor-pointer group'>
+              <li className='cursor-pointer text-sm group'>
                 <a href='mailto:ksanatrigub@gmail.com' className='flex gap-2 items-center'>
                   <IoIosMail className='text-base group-hover:text-accent-1' />{" "}
                   ksanatrigub@gmail.com
@@ -70,31 +70,31 @@ const Footer = () => {
               </li>
             </ul>
             <ul className='hidden sm:flex gap-4'>
-              <li className='p-4 border rounded-full cursor-pointer hover:border-accent-1'>
+              <li className='p-3 border rounded-full cursor-pointer hover:border-accent-1'>
                 <a
                   href='https://www.facebook.com'
                   target='_blank'
                   rel='noopener noreferrer nofollow'
                 >
-                  <FaFacebookF className='text-xl md:text-2xl' />
+                  <FaFacebookF className='text-xl' />
                 </a>
               </li>
-              <li className='p-4 border rounded-full cursor-pointer hover:border-accent-1'>
+              <li className='p-3 border rounded-full cursor-pointer hover:border-accent-1'>
                 <a
                   href='https://www.linkedin.com/in/oksana-tryhub/'
                   target='_blank'
                   rel='noopener noreferrer nofollow'
                 >
-                  <FaLinkedinIn className='text-xl md:text-2xl' />
+                  <FaLinkedinIn className='text-xl' />
                 </a>
               </li>
-              <li className='p-4 border rounded-full cursor-pointer hover:border-accent-1'>
+              <li className='p-3 border rounded-full cursor-pointer hover:border-accent-1'>
                 <a
                   href='https://github.com/OksanaTryhub'
                   target='_blank'
                   rel='noopener noreferrer nofollow'
                 >
-                  <TbBrandGithubFilled className='text-xl md:text-2xl' />
+                  <TbBrandGithubFilled className='text-xl' />
                 </a>
               </li>
             </ul>

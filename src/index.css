@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Montserrat:ital@0;1&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  /* border: 1px solid red; */
+  font-family: "Jost", sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  color: #473a3f;
+}
+
+@layer utilities {
+  .custom-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  .underline-custom {
+    text-decoration-color: #ea2324;
+    text-underline-offset: 4px;
+  }
+}

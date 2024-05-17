@@ -18,7 +18,7 @@ export default {
         },
       },
       backgroundImage: {
-        hero: "url('./src/assets/images/hero.png')",
+        hero: "url('./assets/images/hero.png')",
       },
       keyframes: {
         fadeIn: { "0%": { opacity: 0 }, "100%": { opacity: 1 } },

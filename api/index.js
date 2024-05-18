@@ -13,6 +13,8 @@ const app = express();
 const port = PORT || 3000;
 
 const __dirname = path.resolve();
+console.log("Serving static files from: ", path.join(__dirname, "admin", "dist"));
+console.log("Serving static files from: ", path.join(__dirname, "client", "dist"));
 
 app.use(cors());
 app.use(express.json());
@@ -24,9 +26,11 @@ app.use("/admin", express.static(path.join(__dirname, "/admin/dist")));
 app.use("/", express.static(path.join(__dirname, "/client/dist")));
 
 app.get("/admin/*", (req, res) => {
+  console.log(`Admin route accessed: ${req.originalUrl}`);
   res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
 });
 app.get("*", (req, res) => {
+  console.log(`Client route accessed: ${req.originalUrl}`);
   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
 });
 

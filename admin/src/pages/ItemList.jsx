@@ -7,41 +7,54 @@ import Loader from "../components/Loader";
 
 const ItemList = () => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [dataFetched, setDataFetched] = useState(false);
   const url = "http://localhost:3000";
   const [list, setList] = useState([]);
 
-  useEffect(() => {
-    const fetchList = async () => {
+  const fetchList = async () => {
+    try {
       setLoading(true);
-      try {
-        const res = await axios.get(`/api/food/foodlist`);
+      setError(false);
+      const res = await axios.get(`/api/food/foodlist`);
 
-        if (res.data.success) {
-          setList(res.data.data);
-          setLoading(false);
-        } else {
-          toast.error(res.data.message);
-          setLoading(false);
-        }
-      } catch (error) {
-        toast.error(error.message);
+      if (res.data.success) {
+        setList(res.data.data);
+        setDataFetched(true);
         setLoading(false);
+      } else {
+        toast.error(res.data.message);
+        setLoading(false);
+        setError(true);
+        setDataFetched(true);
       }
-    };
+    } catch (error) {
+      toast.error(error.message);
+      setLoading(false);
+      setError(false);
+      setDataFetched(true);
+    }
+  };
+
+  useEffect(() => {
     fetchList();
-    setLoading(false);
-  }, [list]);
+  }, []);
 
   const removeFoodItem = async (id) => {
     //ADD MODAL WINDOW TO CONFIRM DELETION
     const res = await axios.delete(`/api/food/delete/${id}`);
 
     if (res.data.success) {
+      fetchList();
       toast.success(res.data.message);
     } else {
       toast.error(res.data.message);
     }
   };
+
+  if (loading && !error) {
+    return <Loader />;
+  }
 
   return (
     <section>
@@ -59,7 +72,9 @@ const ItemList = () => {
           </div>
           <hr />
 
-          {list && list.length > 0 ? (
+          {dataFetched && list.length === 0 ? (
+            <EmptyList />
+          ) : (
             list.map((item) => (
               <div key={item._id}>
                 <div className='grid grid-cols-5 items-center text-center gap-1 p-3'>
@@ -79,8 +94,6 @@ const ItemList = () => {
                 <hr />
               </div>
             ))
-          ) : (
-            <EmptyList />
           )}
         </div>
       </div>

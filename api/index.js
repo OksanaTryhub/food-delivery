@@ -22,16 +22,18 @@ app.use(express.json());
 app.use("/api/food", foodRouter);
 app.use("/images", express.static(path.join(__dirname, "api", "uploads")));
 
-app.use("/admin", express.static(path.join(__dirname, "/admin/dist")));
-app.use("/", express.static(path.join(__dirname, "/client/dist")));
+// app.use("/admin", express.static(path.join(__dirname, "/admin/dist")));
+// app.use("/", express.static(path.join(__dirname, "/client/dist")));
+app.use("/", express.static(path.join(__dirname, "/admin/dist")));
 
-app.get("/admin/*", (req, res) => {
-  console.log(`Admin route accessed: ${req.originalUrl}`);
-  res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
-});
+// app.get("/admin/*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
+// });
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+// });
 app.get("*", (req, res) => {
-  console.log(`Client route accessed: ${req.originalUrl}`);
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
 });
 
 app.listen(port, () => {

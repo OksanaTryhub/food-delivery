@@ -3,26 +3,33 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaTrashCan } from "react-icons/fa6";
 import EmptyList from "../components/EmptyList";
+import Loader from "../components/Loader";
 
 const ItemList = () => {
+  const [loading, setLoading] = useState(false);
   const url = "http://localhost:3000";
   const [list, setList] = useState([]);
 
   useEffect(() => {
     const fetchList = async () => {
+      setLoading(true);
       try {
         const res = await axios.get(`/api/food/foodlist`);
 
         if (res.data.success) {
           setList(res.data.data);
+          setLoading(false);
         } else {
           toast.error(res.data.message);
+          setLoading(false);
         }
       } catch (error) {
         toast.error(error.message);
+        setLoading(false);
       }
     };
     fetchList();
+    setLoading(false);
   }, [list]);
 
   const removeFoodItem = async (id) => {

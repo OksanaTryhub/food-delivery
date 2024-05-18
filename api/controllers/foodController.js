@@ -4,6 +4,16 @@ import fs from "fs";
 
 const __dirname = path.resolve();
 
+const test = async (req, res) => {
+  try {
+    res.send("API working!");
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 const addFoodItem = async (req, res) => {
   try {
     const { name, description, price, category } = req.body;
@@ -56,4 +66,4 @@ const removeFoodItem = async (req, res) => {
   }
 };
 
-export { addFoodItem, getFoodList, removeFoodItem };
+export { test, addFoodItem, getFoodList, removeFoodItem };

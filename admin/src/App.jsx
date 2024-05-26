@@ -6,6 +6,7 @@ import Layout from "./components/Layout";
 import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Home from "./pages/Home";
 
 export default function App() {
   return (
@@ -15,9 +16,10 @@ export default function App() {
       <Header />
       <Layout>
         <Routes>
-          <Route path='/add' element={<AddItem />} />
-          <Route path='/list' element={<ItemList />} />
-          <Route path='/orders' element={<Orders />} />
+          <Route path="/admin" element={<Home />} />
+          <Route path="/admin/add" element={<AddItem />} />
+          <Route path="/admin/list" element={<ItemList />} />
+          <Route path="/admin/orders" element={<Orders />} />
         </Routes>
       </Layout>
       {/* </StoreContextProvider> */}

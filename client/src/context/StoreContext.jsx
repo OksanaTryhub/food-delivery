@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import PropTypes from "prop-types";
 import foodList from "./../data/foodList";
 
@@ -57,7 +57,11 @@ const StoreContextProvider = (props) => {
     getTotalItemsQuantity,
   };
 
-  return <StoreContext.Provider value={contextValue}>{props.children}</StoreContext.Provider>;
+  return (
+    <StoreContext.Provider value={contextValue}>
+      {props.children}
+    </StoreContext.Provider>
+  );
 };
 
 StoreContextProvider.propTypes = {

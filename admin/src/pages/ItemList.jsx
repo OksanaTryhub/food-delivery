@@ -16,7 +16,7 @@ const ItemList = () => {
     try {
       setLoading(true);
       setError(false);
-      const res = await axios.get(`/api/food/foodlist`);
+      const res = await axios.get(`/api/food`);
 
       if (res.data.success) {
         setList(res.data.data);
@@ -58,12 +58,12 @@ const ItemList = () => {
 
   return (
     <section>
-      <div className='container flex flex-col items-center justify-between mx-auto p-3 pt-12'>
-        <p className='w-full sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto text-2xl sm:text-3xl lg:text-4xl font-semibold text-center sm:text-start pl-3 mb-4'>
+      <div className="container flex flex-col items-center justify-between mx-auto p-3 pt-12">
+        <p className="w-full sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto text-2xl sm:text-3xl lg:text-4xl font-semibold text-center sm:text-start pl-3 mb-4">
           Food List
         </p>
-        <div className='w-full sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto '>
-          <div className='grid grid-cols-5 items-center text-center gap-1 p-3 text-lg text-gray-400'>
+        <div className="w-full sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto ">
+          <div className="grid grid-cols-5 items-center text-center gap-1 p-3 text-lg text-gray-400">
             <p>Image</p>
             <p>Name</p>
             <p>Category</p>
@@ -77,15 +77,15 @@ const ItemList = () => {
           ) : (
             list.map((item) => (
               <div key={item._id}>
-                <div className='grid grid-cols-5 items-center text-center gap-1 p-3'>
-                  <div className='w-20 mx-auto'>
-                    <img src={`${url}/images/` + item.image} alt='Food image' />
+                <div className="grid grid-cols-5 items-center text-center gap-1 p-3">
+                  <div className="w-20 mx-auto">
+                    <img src={`${url}/images/` + item.image} alt="Food image" />
                   </div>
                   <p>{item.name}</p>
                   <p>{item.description}</p>
                   <p>{item.price}</p>
                   <button
-                    className=' flex hover:text-accent-1 cursor-pointer justify-center '
+                    className=" flex hover:text-accent-1 cursor-pointer justify-center "
                     onClick={() => removeFoodItem(item._id)}
                   >
                     <FaTrashCan />

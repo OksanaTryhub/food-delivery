@@ -2,7 +2,6 @@ import axios from "axios";
 
 export const instance = axios.create({
   baseURL: "https://food-delivery-mern-bhpe.onrender.com/api/admin",
-  // baseURL: "http://localhost:3000",
 });
 
 export const setTokenAdmin = (token) => {
@@ -47,9 +46,9 @@ export const updateAdmin = async (token, data) => {
 };
 
 export const logout = async () => {
-  const { data } = await instance.post("/logout");
+  const result = await instance.post("/logout");
   setTokenAdmin();
-  return data;
+  return result;
 };
 
 // export const updateAvatar = async (token, data) => {

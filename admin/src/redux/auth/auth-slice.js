@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialState from "./auth-initialState";
-import { adminSignup, adminLogin } from "./auth-operations";
+import { adminSignup, adminLogin, adminLogout } from "./auth-operations";
 
 const handlePending = (state) => {
   state.loading = true;
@@ -21,23 +21,24 @@ const authSlice = createSlice({
         handlePending(state);
       })
       .addCase(adminSignup.fulfilled, (state, { payload }) => {
-        const { user, token } = payload;
+        const { data } = payload;
         state.loading = false;
-        state.admin = user;
-        state.token = token;
+        state.admin = data.admin;
+        state.token = data.token;
         state.isLogin = true;
       })
       .addCase(adminSignup.rejected, (state, { payload }) => {
         handleRejected(state, payload);
       })
+
       .addCase(adminLogin.pending, (state) => {
         handlePending(state);
       })
       .addCase(adminLogin.fulfilled, (state, { payload }) => {
-        const { user, token } = payload;
+        const { data } = payload;
         state.loading = false;
-        state.admin = user;
-        state.token = token;
+        state.admin = data.admin;
+        state.token = data.token;
         state.isLogin = true;
       })
       .addCase(adminLogin.rejected, (state, { payload }) => {

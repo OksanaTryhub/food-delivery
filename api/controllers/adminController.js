@@ -19,7 +19,6 @@ const test = async (req, res) => {
 
 const registerAdmin = async (req, res) => {
   const { name, password, email, foodItems } = req.body;
-  console.log("🚀 ~ registerAdmin ~ req.body:", req.body);
 
   try {
     const isAdminExists = await Admin.findOne({ email });

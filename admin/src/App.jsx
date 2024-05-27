@@ -6,8 +6,11 @@ import Home from "./pages/Home";
 import AddItem from "./pages/AddItem";
 import ItemList from "./pages/ItemList";
 import Orders from "./pages/Orders";
+import Profile from "./pages/Profile.jsx";
 import Layout from "./components/Layout";
 import Header from "./components/Header";
+import PublicRoute from "./components/PublicRoute";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,10 +24,16 @@ export default function App() {
         <Header />
         <Layout>
           <Routes>
-            <Route path="/admin" element={<Home />} />
-            <Route path="/admin/add" element={<AddItem />} />
-            <Route path="/admin/list" element={<ItemList />} />
-            <Route path="/admin/orders" element={<Orders />} />
+            <Route element={<PublicRoute />}>
+              <Route path="/admin" element={<Home />} />
+            </Route>
+
+            <Route element={<PrivateRoute></PrivateRoute>}>
+              <Route path="/admin/add" element={<AddItem />} />
+              <Route path="/admin/list" element={<ItemList />} />
+              <Route path="/admin/orders" element={<Orders />} />
+              <Route path="/admin/profile" element={<Profile />} />
+            </Route>
           </Routes>
         </Layout>
         {/* </StoreContextProvider> */}

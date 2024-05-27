@@ -12,7 +12,8 @@ const Header = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showBurger, setShowBurger] = useState(false);
   const location = useLocation();
-  const { getTotalCartAmount, getTotalItemsQuantity } = useContext(StoreContext);
+  const { getTotalCartAmount, getTotalItemsQuantity } =
+    useContext(StoreContext);
 
   const handleShowBurger = () => {
     setShowBurger(true);
@@ -25,18 +26,18 @@ const Header = () => {
   return (
     <>
       {showLoginPopup ? <LoginPopup isOpen={setShowLoginPopup} /> : ""}
-      <header className='flex bg-light-1 shadow-md '>
-        <div className='container flex items-center justify-between mx-auto p-3'>
-          <div className='pl-4'>
-            <Link to='/'>
-              <img src={logo} alt='logo' className='w-[60px] sm:w-20' />
+      <header className="flex bg-light-1 shadow-md ">
+        <div className="container flex items-center justify-between mx-auto p-3">
+          <div className="pl-4">
+            <Link to="/">
+              <img src={logo} alt="logo" className="w-[60px] sm:w-20" />
             </Link>
           </div>
           <nav>
             {location.pathname === "/" && (
-              <ul className='hidden md:flex gap-4 '>
+              <ul className="hidden md:flex gap-4 ">
                 <Link
-                  to='/'
+                  to="/"
                   className={`cursor-pointer hover:text-accent-1 ${
                     activeItem === "home" ? "underline underline-custom" : ""
                   }`}
@@ -45,7 +46,7 @@ const Header = () => {
                   Home
                 </Link>
                 <a
-                  href='#explore-menu'
+                  href="#explore-menu"
                   className={`cursor-pointer hover:text-accent-1 ${
                     activeItem === "menu" ? "underline underline-custom" : ""
                   }`}
@@ -54,18 +55,22 @@ const Header = () => {
                   Menu
                 </a>
                 <a
-                  href='#app-download'
+                  href="#app-download"
                   className={`cursor-pointer hover:text-accent-1 ${
-                    activeItem === "mobile-app" ? "underline underline-custom" : ""
+                    activeItem === "mobile-app"
+                      ? "underline underline-custom"
+                      : ""
                   }`}
                   onClick={() => setActiveItem("mobile-app")}
                 >
                   Mobile App
                 </a>
                 <a
-                  href='#footer'
+                  href="#footer"
                   className={`cursor-pointer hover:text-accent-1 ${
-                    activeItem === "contact-us" ? "underline underline-custom" : ""
+                    activeItem === "contact-us"
+                      ? "underline underline-custom"
+                      : ""
                   }`}
                   onClick={() => setActiveItem("contact-us")}
                 >
@@ -74,14 +79,14 @@ const Header = () => {
               </ul>
             )}
           </nav>
-          <div className='flex gap-4 sm:gap-8 pr-4 items-center'>
-            <FaSearch className='text-[22px] cursor-pointer hover:text-accent-1' />
-            <div className='relative'>
-              <Link to='/cart'>
-                <FaCartShopping className='text-2xl hover:text-accent-1' />
+          <div className="flex gap-4 sm:gap-8 pr-4 items-center">
+            <FaSearch className="text-[22px] cursor-pointer hover:text-accent-1" />
+            <div className="relative">
+              <Link to="/cart">
+                <FaCartShopping className="text-2xl hover:text-accent-1" />
               </Link>
               <div
-                className={`w-3 h-3 bg-accent-1 rounded-full -top-2 -right-2 absolute flex items-center justify-center text-[10px] ${
+                className={`w-4 h-4 bg-accent-1 rounded-full -top-2 -right-2 absolute flex items-center justify-center text-[10px] ${
                   getTotalCartAmount() === 0 && "hidden"
                 }`}
               >
@@ -90,11 +95,14 @@ const Header = () => {
             </div>
             <button
               onClick={handleShowLoginPopup}
-              className='hidden md:flex px-6 py-2 bg-white border rounded-full hover:border-accent-1 transition-colors duration-300 ease-in-out'
+              className="hidden md:flex px-6 py-2 bg-white border rounded-full hover:border-accent-1 transition-colors duration-300 ease-in-out"
             >
               Sign In
             </button>
-            <FaBars onClick={handleShowBurger} className='md:hidden cursor-pointer' />
+            <FaBars
+              onClick={handleShowBurger}
+              className="md:hidden cursor-pointer"
+            />
           </div>
         </div>
       </header>

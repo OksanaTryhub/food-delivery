@@ -1,31 +1,28 @@
 import { Schema, model } from "mongoose";
 
-const foodSchema = new Schema(
+const userSchema = new Schema(
   {
-    name: {
+    username: {
       type: String,
       required: true,
     },
-    description: {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
       type: String,
       required: true,
     },
-    price: {
-      type: Number,
-      required: true,
-    },
-    image: {
-      type: String,
-      required: true,
-    },
-    category: {
-      type: String,
-      required: true,
+    cartData: {
+      type: Object,
+      default: {},
     },
   },
   { minimize: false, versionKey: false, timestamps: true }
 );
 
-const Food = model("food", foodSchema);
+const User = model("user", userSchema);
 
-export default Food;
+export default User;

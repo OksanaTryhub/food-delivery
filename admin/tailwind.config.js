@@ -13,6 +13,7 @@ export default {
         },
         accent: {
           1: "#ea2324",
+          hover: "rgba(234,35,36, 0.7)",
         },
       },
       fontSize: {

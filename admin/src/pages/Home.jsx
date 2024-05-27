@@ -1,7 +1,12 @@
 import React from "react";
+import LoginForm from "../components/LoginForm";
 
 const Home = () => {
-  return <div>Admin Home</div>;
+  return (
+    <section>
+      <LoginForm />
+    </section>
+  );
 };
 
 export default Home;

@@ -1,6 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialState from "./auth-initialState";
-import { adminSignup, adminLogin, adminLogout } from "./auth-operations";
+import {
+  adminSignup,
+  adminLogin,
+  // adminLogout
+} from "./auth-operations";
 
 const handlePending = (state) => {
   state.loading = true;

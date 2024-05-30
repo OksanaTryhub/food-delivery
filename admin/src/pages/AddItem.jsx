@@ -1,18 +1,63 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+
+import { app } from "../firebase";
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 
+//firebase storage
+// allow read;
+// allow write: if
+// request.resource.size < 2 * 1024 * 1024 &&
+// request.resource.contentType.matches('image/.*')
+
 const AddItem = () => {
-  const [image, setImage] = useState(false);
+  const [file, setFile] = useState(false);
+  const [imageUploadPerc, setImageUploadPerc] = useState(0);
+  const [imageUploadError, setImageUploadError] = useState(false);
   const [data, setData] = useState({
     name: "",
     description: "",
     price: "",
     category: "Salads",
+    image: "",
   });
 
-  const onChengeHandler = (e) => {
+  useEffect(() => {
+    console.log("🚀 ~ AddItem ~ data:", data);
+    if (file) {
+      handleImageUpload(file);
+    }
+  }, [file]);
+
+  const handleImageUpload = (image) => {
+    const storage = getStorage(app);
+    const imageName = new Date().getTime() + image.name;
+    const storageRef = ref(storage, imageName);
+    const uploadTask = uploadBytesResumable(storageRef, image);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        setImageUploadPerc(Math.round(progress));
+      },
+      (error) => {
+        setImageUploadError(true);
+        console.log(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setData({ ...data, image: downloadURL })
+        );
+      }
+    );
+  };
+
+  const onChangeHandler = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     setData((data) => ({ ...data, [name]: value }));
@@ -20,23 +65,19 @@ const AddItem = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("description", data.description);
-    formData.append("price", Number(data.price));
-    formData.append("category", data.category);
-    formData.append("image", image);
 
-    const res = await axios.post("/api/food/add", formData);
+    const res = await axios.post("/api/food/add", data);
     if (res.data.success) {
       setData({
         name: "",
         description: "",
         price: "",
         category: "Salads",
+        image: "",
       });
-      setImage(false);
+      setFile(false);
       toast.success(res.data.message);
+      console.log("🚀 ~ onSubmitHandler in AddItem ~ res.data:", res.data);
     } else {
       toast.error(res.data.message);
     }
@@ -55,8 +96,8 @@ const AddItem = () => {
               htmlFor='image'
               className='flex flex-col max-w-[220px] items-center justify-center bg-gray-100 cursor-pointer text-gray-400 font-semibold'
             >
-              {image ? (
-                <img src={URL.createObjectURL(image)} alt='Item image' className='max-w-[220px}' />
+              {file ? (
+                <img src={URL.createObjectURL(file)} alt='Item image' className='max-w-[220px}' />
               ) : (
                 <div className='flex flex-col max-w-[220px] items-center justify-center h-40'>
                   <FaCloudUploadAlt className='text-4xl  text-gray-400' />
@@ -67,7 +108,7 @@ const AddItem = () => {
             <input
               type='file'
               id='image'
-              onChange={(e) => setImage(e.target.files[0])}
+              onChange={(e) => setFile(e.target.files[0])}
               hidden
               required
             />
@@ -75,7 +116,7 @@ const AddItem = () => {
           <div className='flex flex-col gap-2'>
             <p className='font-medium'>Product name</p>
             <input
-              onChange={onChengeHandler}
+              onChange={onChangeHandler}
               value={data.name}
               type='text'
               name='name'
@@ -86,7 +127,7 @@ const AddItem = () => {
           <div className='flex flex-col gap-2'>
             <p className='font-medium'>Product description</p>
             <textarea
-              onChange={onChengeHandler}
+              onChange={onChangeHandler}
               value={data.description}
               name='description'
               rows='6'
@@ -98,7 +139,7 @@ const AddItem = () => {
             <div className='flex flex-col max-w-[220px] sm:flex-1 sm:max-w-none '>
               <p className='font-medium'>Product category</p>
               <select
-                onChange={onChengeHandler}
+                onChange={onChangeHandler}
                 value={data.category}
                 name='category'
                 className='focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 p-2 rounded-lg border '
@@ -116,7 +157,7 @@ const AddItem = () => {
             <div className='flex flex-col max-w-[220px] sm:flex-1 sm:max-w-none'>
               <p className='font-medium'>Product price</p>
               <input
-                onChange={onChengeHandler}
+                onChange={onChangeHandler}
                 value={data.price}
                 type='Number'
                 name='price'

@@ -23,7 +23,6 @@ app.use("/api/food", foodRouter);
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
 
-app.use("/images", express.static(path.join(__dirname, "api", "uploads")));
 app.use("/admin", express.static(path.join(__dirname, "/admin/dist")));
 app.use("/", express.static(path.join(__dirname, "/client/dist")));
 

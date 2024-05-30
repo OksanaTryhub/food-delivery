@@ -1,10 +1,12 @@
 import { createContext, useState } from "react";
 import PropTypes from "prop-types";
-import foodList from "./../data/foodList";
+import { useSelector } from "react-redux";
+import { getFood } from "../redux/food/food-selectors";
 
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
+  const foodList = useSelector(getFood);
   const [cartItems, setCartItems] = useState({});
 
   const addToCart = (itemId) => {
@@ -32,6 +34,8 @@ const StoreContextProvider = (props) => {
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
         let itemInfo = foodList.find((product) => product._id === item);
+        console.log("🚀 ~ getTotalCartAmount ~ foodList:", foodList);
+        console.log("🚀 ~ getTotalCartAmount ~ itemInfo:", itemInfo);
         totalAmount += itemInfo.price * cartItems[item];
       }
     }
@@ -57,11 +61,7 @@ const StoreContextProvider = (props) => {
     getTotalItemsQuantity,
   };
 
-  return (
-    <StoreContext.Provider value={contextValue}>
-      {props.children}
-    </StoreContext.Provider>
-  );
+  return <StoreContext.Provider value={contextValue}>{props.children}</StoreContext.Provider>;
 };
 
 StoreContextProvider.propTypes = {

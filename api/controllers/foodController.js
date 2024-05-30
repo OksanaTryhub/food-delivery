@@ -1,8 +1,7 @@
-import path from "path";
+// import path from "path";
 import Food from "../models/foodModel.js";
-import fs from "fs";
 
-const __dirname = path.resolve();
+// const __dirname = path.resolve();
 
 const test = async (req, res) => {
   try {
@@ -15,19 +14,16 @@ const test = async (req, res) => {
 };
 
 const addFoodItem = async (req, res) => {
+  console.log("🚀 ~ addFoodItem ~ req.body:", req.body);
   try {
-    const { name, description, price, category } = req.body;
-    let image_filename = `${req.file.filename}`;
-
     const newFood = await Food.create({
       ...req.body,
-      image: image_filename,
     });
 
     return res.status(201).json({ newFood, success: true, message: "Food Added" });
   } catch (error) {
     console.log(error);
-    res.json({ success: false, message: "Error adding food" });
+    res.json({ success: false, message: error.message });
   }
 };
 
@@ -44,19 +40,6 @@ const getFoodList = async (req, res) => {
 const removeFoodItem = async (req, res) => {
   try {
     const foodItem = await Food.findById(req.params.id);
-    const imagePath = path.join(__dirname, "api", "uploads", foodItem.image);
-
-    if (!foodItem) {
-      return console.log("Food Item not found!");
-    } else {
-      fs.unlink(imagePath, (err) => {
-        if (err) {
-          console.error("Error deleting image:", err);
-        } else {
-          console.log(`Image ${foodItem.image} deleted`);
-        }
-      });
-    }
 
     await Food.findByIdAndDelete(req.params.id);
     res.status(200).json({ success: true, message: "Food Item has been deleted!" });

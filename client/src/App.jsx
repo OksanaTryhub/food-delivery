@@ -8,6 +8,7 @@ import Cart from "./pages/Cart";
 import PlaceOrder from "./pages/PlaceOrder";
 import StoreContextProvider from "./context/StoreContext";
 import Layout from "./components/Layout";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
               <Route path="/" element={<Home />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/order" element={<PlaceOrder />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
         </StoreContextProvider>

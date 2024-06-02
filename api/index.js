@@ -34,13 +34,9 @@ app.get("*", (req, res) => {
   const url = req.url;
   if (url.startsWith("/admin")) {
     res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
-  } else if (url.startsWith("/food") || url.startsWith("/user")) {
+  } else {
     res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
   }
-});
-
-app.use((req, res) => {
-  res.status(404).json({ message: "Not Found" });
 });
 
 app.listen(port, () => {

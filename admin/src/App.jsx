@@ -14,6 +14,7 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import NotFound from "./pages/NotFound.jsx";
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
               <Route path="/admin/orders" element={<Orders />} />
               <Route path="/admin/profile" element={<Profile />} />
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
         {/* </StoreContextProvider> */}

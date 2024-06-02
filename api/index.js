@@ -30,13 +30,22 @@ app.use("/", express.static(path.join(__dirname, "/client/dist")));
 //   res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
 // });
 
-app.get("*", (req, res) => {
+app.get("*", (req, res, next) => {
   const url = req.url;
   if (url.startsWith("/admin")) {
     res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
-  } else {
+  } else if (url.startsWith("/food") || url.startsWith("/user")) {
+    console.log(url);
     res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-  }
+  } else next();
+});
+
+app.use((req, res) => {
+  res.status(404).json({ message: "Not Found" });
+});
+
+app.use((err, req, res, next) => {
+  res.status(500).json({ message: err.message });
 });
 
 app.listen(port, () => {

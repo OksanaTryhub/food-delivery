@@ -7,6 +7,16 @@ import User from "../models/userModel.js";
 dotenv.config();
 const { JWT_SECRET_KEY, JWT_EXPIRES_IN } = process.env;
 
+const test = async (req, res) => {
+  try {
+    res.send("Hello User test");
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 const registerUser = async (req, res) => {
   const { username, password, email, cartData } = req.body;
 
@@ -89,4 +99,4 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser };
+export { test, loginUser, registerUser };

@@ -26,17 +26,21 @@ app.use("/api/admin", adminRouter);
 app.use("/admin", express.static(path.join(__dirname, "/admin/dist")));
 app.use("/", express.static(path.join(__dirname, "/client/dist")));
 
-app.get("/admin/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
-});
+// app.get("/admin/*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
+// });
 
 app.get("*", (req, res) => {
   const url = req.url;
   if (url.startsWith("/admin")) {
     res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
-  } else {
+  } else if (url.startsWith("/food") || url.startsWith("/user")) {
     res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
   }
+});
+
+app.use((req, res) => {
+  res.status(404).json({ message: "Not Found" });
 });
 
 app.listen(port, () => {

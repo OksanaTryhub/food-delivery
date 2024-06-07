@@ -29,16 +29,16 @@ export const adminLogin = createAsyncThunk(
   }
 );
 
-// export const adminLogout = createAsyncThunk(
-//   "authAdmin/logout",
-//   async (_, { rejectWithValue }) => {
-//     try {
-//       const result = await api.logout();
-//       return result;
-//     } catch ({ response }) {
-//       // authErrorMessage(response);
-//       console.log(response);
-//       return rejectWithValue(response);
-//     }
-//   }
-// );
+export const adminLogout = createAsyncThunk(
+  "authAdmin/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const result = await api.logout();
+      return result;
+    } catch ({ response }) {
+      // authErrorMessage(response);
+      console.log(response);
+      return rejectWithValue(response);
+    }
+  }
+);

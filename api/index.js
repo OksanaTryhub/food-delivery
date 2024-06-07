@@ -26,10 +26,6 @@ app.use("/api/admin", adminRouter);
 app.use("/admin", express.static(path.join(__dirname, "/admin/dist")));
 app.use("/", express.static(path.join(__dirname, "/client/dist")));
 
-// app.get("/admin/*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
-// });
-
 app.get("*", (req, res, next) => {
   const url = req.url;
   if (url.startsWith("/admin")) {
@@ -45,7 +41,8 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  res.status(500).json({ message: err.message });
+  const { status = 500, message = "Server Error" } = err;
+  res.status(status).json({ message });
 });
 
 app.listen(port, () => {

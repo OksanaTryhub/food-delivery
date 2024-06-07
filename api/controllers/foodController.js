@@ -1,83 +1,70 @@
-import Food from "../models/foodModel.js";
+import { Food } from "../models/foodModel.js";
+import HttpError from "./../helpers/HttpError.js";
+import ctrlWrapper from "../utils/ctrlWrapper.js";
 
-const test = async (req, res) => {
-  try {
-    res.send("API working!");
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+const getFoodList = async (req, res, next) => {
+  // const { page = 1, limit = 10 } = req.query;
+  // const skip = (page - 1) * limit;
+  // const data = await Food.find({}, null, {
+  //   skip,
+  //   limit,
+  // });
+  const data = await Food.find();
+  res.status(200).json({ success: true, data });
 };
 
-const addFoodItem = async (req, res) => {
-  try {
-    const newFood = await Food.create({
-      ...req.body,
-    });
+const getFoodListByOwner = async (req, res, next) => {
+  const { _id: owner } = req.user;
 
-    return res
-      .status(201)
-      .json({ newFood, success: true, message: "Food Added" });
-  } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: "Error adding food item" });
-  }
+  const data = await Food.find({ owner }).populate("owner", "name email");
+  res.status(200).json(data);
 };
 
-const getFoodList = async (req, res) => {
-  try {
-    const data = await Food.find({});
-    res.status(200).json({ success: true, data });
-  } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: "Error getting food list" });
-  }
+const addFoodItem = async (req, res, next) => {
+  const { _id: owner } = req.user;
+  const foodItem = await Food.create({ ...req.body, owner });
+
+  return res
+    .status(201)
+    .json({ foodItem, success: true, message: "Food Added" });
 };
 
-const getFoodItem = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const data = await Food.findById(id);
-    res.status(200).json({ success: true, data });
-  } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: "Error getting food item" });
+const getFoodItem = async (req, res, next) => {
+  const { id } = req.params;
+  const item = await Food.findById(id);
+  if (!item) {
+    throw HttpError(404, `Item with ${id} Not Found`);
   }
+  res.status(200).json({ success: true, item });
 };
 
-const updateFoodItem = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const updatedItem = await Food.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
-    res.status(200).json({ success: true, updatedItem });
-  } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: "Error updating food item" });
+const updateFoodItem = async (req, res, next) => {
+  const { id } = req.params;
+  const updatedItem = await Food.findByIdAndUpdate(id, req.body, {
+    new: true,
+  });
+  if (!updatedItem) {
+    throw HttpError(404, `Item with ${id} Not Found`);
   }
+
+  res.json({ success: true, updatedItem });
 };
 
-const removeFoodItem = async (req, res) => {
-  try {
-    const foodItem = await Food.findById(req.params.id);
-
-    await Food.findByIdAndDelete(req.params.id);
-    res
-      .status(200)
-      .json({ success: true, message: "Food Item has been deleted!" });
-  } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: "Error deleting Food Item" });
+const deleteFoodItem = async (req, res, next) => {
+  const { id } = req.params;
+  const removedItem = await Food.findByIdAndDelete(id);
+  if (!removedItem) {
+    throw HttpError(404, `Item with ${id} Not Found`);
   }
+
+  res.json({ success: true, message: "Food Item has been deleted!" });
 };
 
-export {
-  test,
-  addFoodItem,
-  getFoodList,
-  getFoodItem,
-  updateFoodItem,
-  removeFoodItem,
+export default {
+  addFoodItem: ctrlWrapper(addFoodItem),
+  getFoodList: ctrlWrapper(getFoodList),
+  getFoodListByOwner: ctrlWrapper(getFoodListByOwner),
+  getFoodItem: ctrlWrapper(getFoodItem),
+  updateFoodItem: ctrlWrapper(updateFoodItem),
+  deleteFoodItem: ctrlWrapper(deleteFoodItem),
 };

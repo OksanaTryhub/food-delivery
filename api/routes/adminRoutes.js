@@ -1,16 +1,21 @@
 import express from "express";
-import {
-  loginAdmin,
-  // logoutAdmin,
-  registerAdmin,
-  test,
-} from "../controllers/adminController.js";
+import ctrl from "../controllers/adminController.js";
+import validateBody from "../utils/validateBody.js";
+import { schemas } from "../models/adminModel.js";
+import authenticate from "./../middlewares/authenticate.js";
 
 const router = express.Router();
 
-router.get("/test", test);
-router.post("/register", registerAdmin);
-router.post("/login", loginAdmin);
-// router.post("/logout", logoutAdmin);
+router.get("/test", ctrl.test);
+router.post(
+  "/register",
+  validateBody(schemas.registerAdminSchema),
+  ctrl.registerAdmin
+);
+router.post("/login", validateBody(schemas.loginAdminSchema), ctrl.loginAdmin);
+router.post("/logout", authenticate("admin"), ctrl.logoutAdmin);
+router.get("/current", authenticate("admin"), ctrl.getCurrentAdmin);
+router.post("/update", authenticate("admin"), ctrl.updateAdmin);
+router.delete("/:id", authenticate("admin"), ctrl.deleteAdmin);
 
 export default router;

@@ -4,8 +4,16 @@ import { FaListCheck } from "react-icons/fa6";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { LuLogOut } from "react-icons/lu";
 import PropTypes from "prop-types";
+// import { useDispatch } from "react-redux";
+// import { logoutAdmin } from "../../../api/controllers/adminController";
 
 const ProfileModal = ({ isOpen }) => {
+  // const dispatch = useDispatch();
+  const handleLogout = () => {
+    isOpen(false);
+    // dispatch(logoutAdmin);
+  };
+
   return (
     <Modal
       bgClassName="bg-transparent"
@@ -15,6 +23,7 @@ const ProfileModal = ({ isOpen }) => {
       <div className="flex flex-col gap-4">
         <NavLink
           to="/admin/list"
+          onClick={() => isOpen(false)}
           className="group flex items-center gap-3 p-3 border-b rounded-t-md cursor-pointer hover:underline underline-custom"
         >
           <FaListCheck className=" text-xl md:text-2xl group-hover:text-accent-1" />
@@ -22,6 +31,7 @@ const ProfileModal = ({ isOpen }) => {
         </NavLink>
         <NavLink
           to="/admin/profile"
+          onClick={() => isOpen(false)}
           className="group flex items-center gap-3 p-3 border-b rounded-t-md cursor-pointer hover:underline underline-custom"
         >
           <RiUserSettingsLine className=" text-xl md:text-2xl group-hover:text-accent-1" />
@@ -29,7 +39,7 @@ const ProfileModal = ({ isOpen }) => {
         </NavLink>
 
         <button
-          onClick={() => isOpen(false)}
+          onClick={() => handleLogout()}
           className="group flex items-center gap-3 p-3 rounded-t-md cursor-pointer hover:underline underline-custom"
         >
           <LuLogOut className=" text-xl md:text-2xl group-hover:text-accent-1" />

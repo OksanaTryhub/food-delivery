@@ -1,102 +1,118 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import validator from "validator";
 import dotenv from "dotenv";
-import User from "../models/userModel.js";
+import { User } from "../models/userModel.js";
+import ctrlWrapper from "./../utils/ctrlWrapper.js";
+import HttpError from "../helpers/HttpError.js";
 
 dotenv.config();
 const { JWT_SECRET_KEY, JWT_EXPIRES_IN } = process.env;
 
 const test = async (req, res) => {
-  try {
-    res.send("Hello User test");
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  res.send("Hello User test");
 };
 
 const registerUser = async (req, res) => {
-  const { username, password, email, cartData } = req.body;
+  const { username, password, email } = req.body;
 
-  try {
-    const isUserExists = await User.findOne({ email });
-    if (isUserExists) {
-      return res
-        .status(409)
-        .json({ success: false, message: "Email already in use" });
-    }
-
-    if (!validator.isEmail(email)) {
-      return res.status(400).json({
-        success: false,
-        message: "Please enter a valid email",
-      });
-    }
-
-    if (password.length < 8) {
-      return res.status(400).json({
-        success: false,
-        message: "Password must be at least 8 characters",
-      });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = await User.create({
-      username,
-      email,
-      password: hashedPassword,
-      cartData,
-    });
-
-    const payload = {
-      id: newUser._id,
-    };
-    const token = jwt.sign(payload, JWT_SECRET_KEY, {
-      expiresIn: JWT_EXPIRES_IN,
-    });
-
-    const { password: pass, ...rest } = newUser._doc;
-    res.status(201).json({ success: true, token, user: rest });
-  } catch (error) {
-    console.log(error);
-    res.status(error.status).json({ success: false, message: error.message });
+  const isUserExists = await User.findOne({ email });
+  if (isUserExists) {
+    throw HttpError(409, "Email already in use");
   }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = await User.create({
+    username,
+    email,
+    password: hashedPassword,
+  });
+
+  const payload = {
+    id: user._id,
+  };
+  const token = jwt.sign(payload, JWT_SECRET_KEY, {
+    expiresIn: JWT_EXPIRES_IN,
+  });
+
+  const newUser = await User.findByIdAndUpdate(
+    user._id,
+    { token },
+    { new: true }
+  );
+
+  const { password: pass, token: tok, ...rest } = newUser._doc;
+  res.status(201).json({ success: true, token, user: rest });
 };
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-  try {
-    const validUser = await User.findOne({ email });
 
-    if (!validUser) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Email or password invalid" });
-    }
+  const validUser = await User.findOne({ email });
 
-    const isPasswordMatch = await bcrypt.compare(password, validUser.password);
-    if (!isPasswordMatch) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Email or password invalid" });
-    }
-
-    const payload = {
-      id: validUser._id,
-    };
-    const token = jwt.sign(payload, JWT_SECRET_KEY, {
-      expiresIn: JWT_EXPIRES_IN,
-    });
-
-    const { password: pass, ...rest } = validUser._doc;
-    res.status(200).json({ success: true, token, user: rest });
-  } catch (error) {
-    console.log(error);
-    res.status(error.status).json({ success: false, message: error.message });
+  if (!validUser) {
+    throw HttpError(401, "Email or password invalid");
   }
+
+  const isPasswordMatch = await bcrypt.compare(password, validUser.password);
+  if (!isPasswordMatch) {
+    throw HttpError(401, "Email or password invalid");
+  }
+
+  const payload = {
+    id: validUser._id,
+  };
+  const token = jwt.sign(payload, JWT_SECRET_KEY, {
+    expiresIn: JWT_EXPIRES_IN,
+  });
+
+  const user = await User.findByIdAndUpdate(
+    validUser._id,
+    { token },
+    { new: true }
+  );
+
+  const { password: pass, token: tok, ...rest } = user._doc;
+  res.status(200).json({ success: true, token, user: rest });
 };
 
-export { test, loginUser, registerUser };
+const updateUser = async (req, res, next) => {
+  const { _id: id } = req.user;
+
+  const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true });
+  if (!updatedUser) {
+    throw HttpError(404, "User Not Found");
+  }
+
+  const { token: tok, ...rest } = updatedUser._doc;
+  res.json({
+    success: true,
+    user: rest,
+    message: "User profile has been successfully updated!",
+  });
+};
+
+const deleteUser = async (req, res, next) => {
+  const { _id: id } = req.user;
+  const result = await User.findByIdAndDelete(id);
+  if (!result) {
+    throw HttpError(404, "User Not Found");
+  }
+
+  res.json({ success: true, message: "User profile successfully deleted!" });
+};
+
+const currentUser = async (req, res, next) => {
+  const { password: pass, ...rest } = req.user._doc;
+
+  res.json(rest);
+};
+
+export default {
+  test: ctrlWrapper(test),
+  loginUser: ctrlWrapper(loginUser),
+  registerUser: ctrlWrapper(registerUser),
+  updateUser: ctrlWrapper(updateUser),
+  deleteUser: ctrlWrapper(deleteUser),
+  currentUser: ctrlWrapper(currentUser),
+};

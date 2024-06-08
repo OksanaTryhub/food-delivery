@@ -4,14 +4,16 @@ import { FaListCheck } from "react-icons/fa6";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { LuLogOut } from "react-icons/lu";
 import PropTypes from "prop-types";
-// import { useDispatch } from "react-redux";
-// import { logoutAdmin } from "../../../api/controllers/adminController";
+import { useDispatch, useSelector } from "react-redux";
+import { adminLogout } from "./../redux/auth/auth-operations";
+import { getToken } from "../redux/auth/auth-selectors";
 
 const ProfileModal = ({ isOpen }) => {
-  // const dispatch = useDispatch();
+  const token = useSelector(getToken);
+  const dispatch = useDispatch();
   const handleLogout = () => {
     isOpen(false);
-    // dispatch(logoutAdmin);
+    dispatch(adminLogout(token));
   };
 
   return (

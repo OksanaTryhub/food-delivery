@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 
 import { getFood, isError, isLoading } from "../redux/food/food-selectors";
-import { fetchFood } from "../redux/food/food-operations";
+import { fetchDeleteFoodItem, fetchFood } from "../redux/food/food-operations";
 
 import { toast } from "react-toastify";
 import { FaTrashCan } from "react-icons/fa6";
 import { GrUpdate } from "react-icons/gr";
 import EmptyList from "../components/EmptyList";
 import Loader from "../components/Loader";
+import { deleteObject, getStorage, ref } from "firebase/storage";
+import { app } from "../firebase";
 
 const ItemList = () => {
   const [dataFetched, setDataFetched] = useState(false);
@@ -30,15 +31,29 @@ const ItemList = () => {
   };
 
   const removeFoodItem = async (id) => {
+    const imageDownloadURL = foodList.find((item) => item._id === id)?.image;
     //ADD MODAL WINDOW TO CONFIRM DELETION
-    const res = await axios.delete(`/api/food/delete/${id}`);
+    dispatch(fetchDeleteFoodItem(id))
+      .then((res) => {
+        if (imageDownloadURL) {
+          const storage = getStorage(app);
+          const imageRef = ref(storage, imageDownloadURL);
+          try {
+            deleteObject(imageRef);
+          } catch (error) {
+            console.error("Error deleting image from Firebase Storage:", error);
+          }
+        } else {
+          console.log(
+            "No image found for the food item to delete from Storage"
+          );
+        }
 
-    if (res.data.success) {
-      dispatch(fetchFood());
-      toast.success(res.data.message);
-    } else {
-      toast.error(res.data.message);
-    }
+        toast.success(res.payload.message);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   if (loading && !error) {
@@ -51,7 +66,7 @@ const ItemList = () => {
         <p className="w-full sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto text-2xl sm:text-3xl lg:text-4xl font-semibold text-center sm:text-start pl-3 mb-4">
           Food List
         </p>
-        <div className="w-full sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto ">
+        <div className="w-full sm:w-[90%] md:w-[80%] lg:w-[75%] mx-auto ">
           <div className="grid grid-cols-5 items-center text-center gap-1 p-3 text-lg text-gray-400">
             <p>Image</p>
             <p>Name</p>
@@ -61,14 +76,11 @@ const ItemList = () => {
           </div>
           <hr />
 
-          {dataFetched && foodList.length === 0 ? (
-            <EmptyList />
-          ) : (
+          {dataFetched && foodList.length > 0 ? (
             foodList.map((item) => (
               <div key={item._id}>
                 <div className="grid grid-cols-5 items-center text-center gap-1 p-3">
                   <div className="w-20 mx-auto">
-                    {/* <img src={`${url}/images/` + item.image} alt='Food image' /> */}
                     <img src={item.image} alt="Food image" />
                   </div>
                   <p>{item.name}</p>
@@ -94,6 +106,8 @@ const ItemList = () => {
                 <hr />
               </div>
             ))
+          ) : (
+            <EmptyList />
           )}
         </div>
       </div>

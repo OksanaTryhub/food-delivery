@@ -19,8 +19,10 @@ const authSlice = createSlice({
     builder
       .addCase(adminSignup.pending, (state) => {
         handlePending(state);
+        state.isLogin = false;
       })
       .addCase(adminSignup.fulfilled, (state, { payload }) => {
+        console.log("🚀 ~ .addCase ~ payload:", payload);
         const { data } = payload;
         state.loading = false;
         state.admin = data.admin;
@@ -29,6 +31,8 @@ const authSlice = createSlice({
       })
       .addCase(adminSignup.rejected, (state, { payload }) => {
         handleRejected(state, payload);
+        state.isLogin = false;
+        state.token = "";
       })
 
       .addCase(adminLogin.pending, (state) => {
@@ -52,7 +56,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.admin = {};
         state.token = "";
-        state.isLogin = true;
+        state.isLogin = false;
       })
       .addCase(adminLogout.rejected, (state, { payload }) => {
         handleRejected(state, payload);

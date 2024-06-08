@@ -16,27 +16,30 @@ const Header = () => {
   };
 
   return (
-    <>
-      <header className='flex bg-light-1 shadow-md '>
-        <div className='container relative flex items-center justify-between mx-auto p-3'>
+    <div className="fixed w-full z-30">
+      <header className="flex bg-light-1 shadow-md ">
+        <div className="container relative flex items-center justify-between mx-auto p-3">
           {showModal ? <ProfileModal isOpen={setShowModal} /> : ""}
-          <div className='pl-4'>
-            <Link to='/admin' className='flex flex-col items-center'>
-              <img src={logo} alt='logo' className='w-[60px] sm:w-16' />
-              <p className='font-medium mt-2'>Admin Panel</p>
+          <div className="pl-4">
+            <Link to="/admin" className="flex flex-col items-center">
+              <img src={logo} alt="logo" className="w-[60px] sm:w-16" />
+              <p className="font-medium mt-2">Admin Panel</p>
             </Link>
           </div>
 
-          <div className='flex gap-4 sm:gap-8 pr-4 items-center'>
+          <div className="flex gap-4 sm:gap-8 pr-4 items-center">
             {isLogin && (
-              <button onClick={handleShowModal} className='bg-red-100 p-3 rounded-full text-3xl'>
+              <button
+                onClick={handleShowModal}
+                className="bg-red-100 p-3 rounded-full text-3xl"
+              >
                 <FaUserAstronaut />
               </button>
             )}
           </div>
         </div>
       </header>
-    </>
+    </div>
   );
 };
 

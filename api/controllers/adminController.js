@@ -40,7 +40,11 @@ const registerAdmin = async (req, res, next) => {
     { token },
     { new: true }
   );
-  const { password: pass, token: tok, ...rest } = admin._doc;
+  const {
+    password: pass,
+    // token: tok,
+    ...rest
+  } = admin._doc;
 
   res.status(201).json({ success: true, token, admin: rest });
 };
@@ -70,16 +74,21 @@ const loginAdmin = async (req, res, next) => {
     { new: true }
   );
 
-  const { password: pass, token: tok, ...rest } = updatedAdmin._doc;
+  const {
+    password: pass,
+    // token: tok,
+    ...rest
+  } = updatedAdmin._doc;
   res.json({ success: true, token, admin: rest });
 };
 
 const logoutAdmin = async (req, res, next) => {
   const { _id } = req.user;
-  console.log("🚀 ~ logoutAdmin ~ req.user:", req.user);
 
-  await Admin.findByIdAndUpdate(_id, { token: "" });
-  res.json({ message: "Admin has been logged out!" });
+  await Admin.findByIdAndUpdate(_id, { token: "" }, { new: true });
+  const { password: pass, ...rest } = req.user._doc;
+
+  res.json({ rest, message: "Admin has been logged out!" });
 };
 
 const getCurrentAdmin = async (req, res, next) => {

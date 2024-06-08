@@ -4,13 +4,13 @@ import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <>
-      <div className="flex gap-5 border-b xs:hidden ">
+    <div className="relative container">
+      <div className="flex gap-5 border-b xs:hidden bg-white fixed top-[105px] w-full pt-5">
         <NavLink
           to="/admin/add"
           title="Add Items"
           className={({ isActive }) =>
-            `group flex items-center justify-center gap-3 p-3 border border-b-transparent rounded-t-md  bg-gray-100 cursor-pointer hover:underline underline-custom ${
+            `group flex items-center justify-center gap-3 p-3 ml-10 border border-b-transparent rounded-t-md  bg-gray-100 cursor-pointer hover:underline underline-custom ${
               isActive ? "bg-white border-b-2  border-b-white -mb-px z-20" : ""
             }`
           }
@@ -40,7 +40,7 @@ const Sidebar = () => {
           <BsCardChecklist className=" text-3xl md:text-2xl lg:text-3xl group-hover:text-accent-1" />
         </NavLink>
       </div>
-      <div className="hidden xs:flex flex-col pt-12 gap-5 border-r">
+      <div className="hidden xs:flex fixed top-[105px] h-full flex-col pt-12 sm:pl-8 gap-5 border-r">
         <NavLink
           to="/admin/add"
           className={({ isActive }) =>
@@ -81,7 +81,7 @@ const Sidebar = () => {
           </p>
         </NavLink>
       </div>
-    </>
+    </div>
   );
 };
 

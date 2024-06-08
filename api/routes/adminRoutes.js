@@ -13,6 +13,10 @@ router.post(
   ctrl.registerAdmin
 );
 router.post("/login", validateBody(schemas.loginAdminSchema), ctrl.loginAdmin);
+// router.post("/logout", ctrl.logoutAdmin);
+// router.get("/current", ctrl.getCurrentAdmin);
+// router.post("/update", ctrl.updateAdmin);
+// router.delete("/:id", ctrl.deleteAdmin);
 router.post("/logout", authenticate("admin"), ctrl.logoutAdmin);
 router.get("/current", authenticate("admin"), ctrl.getCurrentAdmin);
 router.post("/update", authenticate("admin"), ctrl.updateAdmin);

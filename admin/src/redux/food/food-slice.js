@@ -1,9 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchFood } from "./food-operations";
+
+import {
+  fetchFood,
+  fetchAddFoodItem,
+  fetchDeleteFoodItem,
+} from "./food-operations";
 
 const initialState = {
-  food: [],
-  success: false,
+  items: [],
+  // success: false,
   loading: false,
   error: null,
 };
@@ -11,22 +16,41 @@ const initialState = {
 const foodSlice = createSlice({
   name: "food",
   initialState,
-  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchFood.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+      .addCase(fetchFood.pending, (store) => {
+        store.loading = true;
       })
-      .addCase(fetchFood.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        state.food = action.payload;
+      .addCase(fetchFood.fulfilled, (store, { payload }) => {
+        store.loading = false;
+        store.items = payload.data;
       })
-      .addCase(fetchFood.rejected, (state, action) => {
-        state.loading = false;
-        state.success = false;
-        state.error = action.error.message;
+      .addCase(fetchFood.rejected, (store) => {
+        store.loading = false;
+        store.error = true;
+      })
+      .addCase(fetchAddFoodItem.pending, (store) => {
+        store.loading = true;
+      })
+      .addCase(fetchAddFoodItem.fulfilled, (store, { payload }) => {
+        store.loading = false;
+        store.items.push(payload);
+      })
+      .addCase(fetchAddFoodItem.rejected, (store) => {
+        store.loading = false;
+        store.error = true;
+      })
+      .addCase(fetchDeleteFoodItem.pending, (store) => {
+        store.loading = true;
+      })
+      .addCase(fetchDeleteFoodItem.fulfilled, (store, { payload }) => {
+        store.loading = false;
+        const index = store.items.findIndex((item) => item.id === payload);
+        store.items.splice(index, 1);
+      })
+      .addCase(fetchDeleteFoodItem.rejected, (store) => {
+        store.loading = false;
+        store.error = true;
       });
   },
 });

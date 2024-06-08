@@ -32,7 +32,7 @@ const adminSchema = new Schema(
     },
   },
   {
-    // minimize: false,
+    minimize: false,
     versionKey: false,
     timestamps: true,
   }

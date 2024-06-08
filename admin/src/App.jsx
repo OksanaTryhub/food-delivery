@@ -29,7 +29,7 @@ export default function App() {
               <Route path="/admin" element={<Home />} />
             </Route>
 
-            <Route element={<PrivateRoute></PrivateRoute>}>
+            <Route element={<PrivateRoute />}>
               <Route path="/admin/add" element={<AddItem />} />
               <Route path="/admin/list" element={<ItemList />} />
               <Route path="/admin/orders" element={<Orders />} />

@@ -23,6 +23,7 @@ const getFoodListByOwner = async (req, res, next) => {
 const addFoodItem = async (req, res, next) => {
   const { _id: owner } = req.user;
   const foodItem = await Food.create({ ...req.body, owner });
+  // const foodItem = await Food.create({ ...req.body });
 
   return res
     .status(201)

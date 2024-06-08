@@ -31,9 +31,10 @@ export const adminLogin = createAsyncThunk(
 
 export const adminLogout = createAsyncThunk(
   "authAdmin/logout",
-  async (_, { rejectWithValue }) => {
+  async (token, { rejectWithValue }) => {
+    console.log("🚀 ~ token:", token);
     try {
-      const result = await api.logout();
+      const result = await api.logout(token);
       return result;
     } catch ({ response }) {
       // authErrorMessage(response);

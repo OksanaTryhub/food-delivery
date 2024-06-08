@@ -22,13 +22,13 @@ const LoginForm = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     try {
       if (activeTab === "login") {
-        await dispatch(adminLogin(data));
+        dispatch(adminLogin({ email: data.email, password: data.password }));
       } else if (activeTab === "create") {
-        await dispatch(adminSignup(data));
+        dispatch(adminSignup(data));
       } else if (activeTab === "reset") {
         console.log("RESET PASSWORD");
       }

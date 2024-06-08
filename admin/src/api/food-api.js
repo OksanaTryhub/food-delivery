@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const foodInstance = axios.create({
-  baseURL: "https://food-delivery-mern-bhpe.onrender.com/api",
+  baseURL: "https://food-delivery-mern-bhpe.onrender.com/api/food",
   // baseURL: "http://localhost:3000/api/food",
 });
 

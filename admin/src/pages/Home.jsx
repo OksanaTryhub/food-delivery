@@ -1,9 +1,8 @@
-import React from "react";
 import LoginForm from "../components/LoginForm";
 
 const Home = () => {
   return (
-    <section>
+    <section className="sm:pl-10 md:pl-16 lg:pl-20">
       <LoginForm />
     </section>
   );

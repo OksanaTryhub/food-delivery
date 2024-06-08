@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const instance = axios.create({
-  baseURL: "https://food-delivery-mern-bhpe.onrender.com/api",
+  baseURL: "https://food-delivery-mern-bhpe.onrender.com/api/user",
   // baseURL: "http://localhost:3000/api",
 });
 
@@ -13,13 +13,13 @@ export const setToken = (token) => {
 };
 
 export const signup = async (data) => {
-  const { data: result } = await instance.post("/user/register", data);
+  const { data: result } = await instance.post("/register", data);
   setToken(result.token);
   return result;
 };
 
 export const login = async (data) => {
-  const { data: result } = await instance.post("/user/login", data);
+  const { data: result } = await instance.post("/login", data);
   setToken(result.token);
   return result;
 };
@@ -27,7 +27,7 @@ export const login = async (data) => {
 // export const getCurrent = async (token) => {
 //   try {
 //     setToken(token);
-//     const { data } = await instance.get("/user/current");
+//     const { data } = await instance.get("/current");
 //     return data;
 //   } catch (error) {
 //     setToken();
@@ -38,7 +38,7 @@ export const login = async (data) => {
 // export const updateUser = async (token, data) => {
 //   try {
 //     setToken(token);
-//     const { data: result } = await instance.patch("/user", data);
+//     const { data: result } = await instance.patch("/", data);
 //     return result;
 //   } catch (error) {
 //     setToken();
@@ -49,7 +49,7 @@ export const login = async (data) => {
 // export const updateAvatar = async (token, data) => {
 //   try {
 //     setToken(token);
-//     const { data: result } = await instance.patch("/user/avatars", data);
+//     const { data: result } = await instance.patch("/avatars", data);
 //     return result;
 //   } catch (error) {
 //     setToken();
@@ -58,19 +58,8 @@ export const login = async (data) => {
 // };
 
 // export const logout = async () => {
-//   const { data } = await instance.post("/user/logout");
+//   const { data } = await instance.post("/logout");
 //   setToken();
-//   return data;
-// };
-
-// export const addToFavorite = async (id) => {
-//   const { data: result } = await instance.post(`/notices/favorites/${id}`);
-//   return result;
-// };
-
-// export const deleteFromFavorite = async (id) => {
-//   const data = await instance.delete(`/notices/favorites/${id}`);
-
 //   return data;
 // };
 

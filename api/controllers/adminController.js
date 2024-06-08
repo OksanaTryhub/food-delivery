@@ -40,11 +40,7 @@ const registerAdmin = async (req, res, next) => {
     { token },
     { new: true }
   );
-  const {
-    password: pass,
-    // token: tok,
-    ...rest
-  } = admin._doc;
+  const { password: pass, token: tok, ...rest } = admin._doc;
 
   res.status(201).json({ success: true, token, admin: rest });
 };
@@ -74,11 +70,7 @@ const loginAdmin = async (req, res, next) => {
     { new: true }
   );
 
-  const {
-    password: pass,
-    // token: tok,
-    ...rest
-  } = updatedAdmin._doc;
+  const { password: pass, token: tok, ...rest } = updatedAdmin._doc;
   res.json({ success: true, token, admin: rest });
 };
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const instance = axios.create({
-  baseURL: "https://food-delivery-mern-bhpe.onrender.com/api/admin",
+const instance = axios.create({
+  baseURL: "https://food-delivery-mern-bhpe.onrender.com/api",
   // baseURL: "http://localhost:3000/api/admin",
 });
 
@@ -13,13 +13,13 @@ export const setTokenAdmin = (token) => {
 };
 
 export const signupAdmin = async (data) => {
-  const result = await instance.post("/register", data);
+  const result = await instance.post("/admin/register", data);
   setTokenAdmin(result.data.token);
   return result;
 };
 
 export const loginAdmin = async (data) => {
-  const result = await instance.post("/login", data);
+  const result = await instance.post("/admin/login", data);
   setTokenAdmin(result.data.token);
   return result;
 };
@@ -27,7 +27,7 @@ export const loginAdmin = async (data) => {
 export const getCurrentAdmin = async (token) => {
   try {
     setTokenAdmin(token);
-    const { data } = await instance.get("/current");
+    const { data } = await instance.get("/admin/current");
     return data;
   } catch (error) {
     setTokenAdmin();
@@ -38,7 +38,7 @@ export const getCurrentAdmin = async (token) => {
 export const updateAdmin = async (token, data) => {
   try {
     setTokenAdmin(token);
-    const { data: result } = await instance.patch("/update", data);
+    const { data: result } = await instance.patch("/admin/update", data);
     return result;
   } catch (error) {
     setTokenAdmin();
@@ -47,7 +47,7 @@ export const updateAdmin = async (token, data) => {
 };
 
 export const logout = async () => {
-  const result = await instance.post("/logout");
+  const result = await instance.post("/admin/logout");
   setTokenAdmin();
   return result;
 };

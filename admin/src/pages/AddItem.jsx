@@ -12,16 +12,8 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { fetchAddFoodItem } from "../redux/food/food-operations";
 import { toast } from "react-toastify";
 
-//firebase storage
-// allow read;
-// allow write: if
-// request.resource.size < 2 * 1024 * 1024 &&
-// request.resource.contentType.matches('image/.*')
-
 const AddItem = () => {
   const [file, setFile] = useState(false);
-  // const [imageUploadPerc, setImageUploadPerc] = useState(0);
-  // const [imageUploadError, setImageUploadError] = useState(false);
   const [data, setData] = useState({
     name: "",
     description: "",
@@ -38,30 +30,19 @@ const AddItem = () => {
     }
   }, [file]);
 
-  const handleImageUpload = (image) => {
+  const handleImageUpload = async (image) => {
     const storage = getStorage(app);
-    const imageName = new Date().getTime() + image.name;
+    const imageName = new Date().getTime() + "_" + image.name;
     const storageRef = ref(storage, imageName);
-    const uploadTask = uploadBytesResumable(storageRef, image);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        // setImageUploadPerc(Math.round(progress));
-      },
-      (error) => {
-        toast.error(error.message);
-        // setImageUploadError(error.message);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setData({ ...data, image: downloadURL })
-        );
-      }
-    );
+    try {
+      const uploadTask = uploadBytesResumable(storageRef, image);
+      const snapshot = await uploadTask;
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      setData({ ...data, image: downloadURL });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
   const onChangeHandler = (e) => {
@@ -70,27 +51,26 @@ const AddItem = () => {
     setData((data) => ({ ...data, [name]: value }));
   };
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-    dispatch(fetchAddFoodItem(data))
-      .then((res) => {
-        if (res.payload.success) {
-          toast.success(res.payload.message);
-          setData({
-            name: "",
-            description: "",
-            price: "",
-            category: "Salads",
-            image: "",
-          });
-          setFile(false);
-        } else {
-          toast.error(res.payload.message);
-        }
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+    try {
+      const response = await dispatch(fetchAddFoodItem(data));
+      if (response.payload.success) {
+        toast.success(response.payload.message);
+        setData({
+          name: "",
+          description: "",
+          price: "",
+          category: "Salads",
+          image: "",
+        });
+        setFile(false);
+      } else {
+        toast.error(response.payload.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (

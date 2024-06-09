@@ -16,7 +16,7 @@ const Header = () => {
   };
 
   return (
-    <div className="fixed w-full z-30">
+    <div className="fixed w-full z-40">
       <header className="flex bg-light-1 shadow-md ">
         <div className="container relative flex items-center justify-between mx-auto p-3">
           {showModal ? <ProfileModal isOpen={setShowModal} /> : ""}

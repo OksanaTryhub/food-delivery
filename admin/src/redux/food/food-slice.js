@@ -4,11 +4,11 @@ import {
   fetchFood,
   fetchAddFoodItem,
   fetchDeleteFoodItem,
+  fetchUpdateFoodItem,
 } from "./food-operations";
 
 const initialState = {
   items: [],
-  // success: false,
   loading: false,
   error: null,
 };
@@ -36,9 +36,9 @@ const foodSlice = createSlice({
         store.loading = false;
         store.items.push(payload);
       })
-      .addCase(fetchAddFoodItem.rejected, (store) => {
+      .addCase(fetchAddFoodItem.rejected, (store, { payload }) => {
         store.loading = false;
-        store.error = true;
+        store.error = payload;
       })
       .addCase(fetchDeleteFoodItem.pending, (store) => {
         store.loading = true;
@@ -48,9 +48,21 @@ const foodSlice = createSlice({
         const index = store.items.findIndex((item) => item.id === payload);
         store.items.splice(index, 1);
       })
-      .addCase(fetchDeleteFoodItem.rejected, (store) => {
+      .addCase(fetchDeleteFoodItem.rejected, (store, { payload }) => {
         store.loading = false;
-        store.error = true;
+        store.error = payload;
+      })
+      .addCase(fetchUpdateFoodItem.pending, (store) => {
+        store.loading = true;
+      })
+      .addCase(fetchUpdateFoodItem.fulfilled, (store, { payload }) => {
+        store.loading = false;
+        const index = store.items.findIndex((item) => item.id === payload._id);
+        store.items[index] = payload.updatedItem;
+      })
+      .addCase(fetchUpdateFoodItem.rejected, (store, { payload }) => {
+        store.loading = false;
+        store.error = payload;
       });
   },
 });

@@ -36,3 +36,15 @@ export const fetchDeleteFoodItem = createAsyncThunk(
     }
   }
 );
+
+export const fetchUpdateFoodItem = createAsyncThunk(
+  "food/updateFoodItem",
+  async ({ id, ...rest }, { rejectWithValue }) => {
+    try {
+      const result = await api.updateFoodItem(id, rest);
+      return result;
+    } catch ({ response }) {
+      return rejectWithValue(response.data);
+    }
+  }
+);

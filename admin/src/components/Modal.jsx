@@ -30,7 +30,7 @@ const Modal = ({ isOpen, bgClassName, contentClassName, children }) => {
   return (
     <div
       onClick={handleBackdropClick}
-      className={`absolute top-0 right-0 w-screen h-screen bg-dark-popup z-50 ${bgClassName}`}
+      className={`fixed top-0 right-0 w-screen h-screen bg-dark-popup z-50 ${bgClassName}`}
     >
       <div
         className={`className bg-light-1 rounded-lg animate-fadeIn ${contentClassName}`}

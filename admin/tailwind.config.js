@@ -32,6 +32,12 @@ export default {
         // cartItem: "1fr 1.5fr 1fr 1fr 1fr 0.5fr",
         // cartItemXS: "1fr 1.5fr 1fr ",
       },
+      keyframes: {
+        fadeIn: { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
+      },
+      animation: {
+        fadeIn: "fadeIn 1000ms ease-in-out",
+      },
     },
   },
   plugins: [],

@@ -20,3 +20,8 @@ export const deleteFoodItem = async (id) => {
   const { data } = await instance.delete(`/food/delete/${id}`);
   return data;
 };
+
+export const updateFoodItem = async (id, updateData) => {
+  const { data } = await instance.post(`/food/update/${id}`, updateData);
+  return data;
+};

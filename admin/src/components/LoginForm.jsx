@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { isLoading, isError } from "../redux/auth/auth-selectors.js";
+import { useDispatch } from "react-redux";
 import { adminSignup, adminLogin } from "../redux/auth/auth-operations.js";
 
 const LoginForm = () => {
   const [activeTab, setActiveTab] = useState("login");
   const dispatch = useDispatch();
-  const loading = useSelector(isLoading);
-  const error = useSelector(isError);
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -24,6 +21,7 @@ const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     try {
       if (activeTab === "login") {
         dispatch(adminLogin({ email: data.email, password: data.password }));

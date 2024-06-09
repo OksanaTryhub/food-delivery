@@ -107,7 +107,7 @@ const FoodItemUpdateModal = ({
               />
             </div>
           </div>
-          <div className="flex justify-between w-full pt-8">
+          <div className="flex justify-between w-full pt-4">
             <button
               className="font-medium px-4 py-2 border rounded-full hover:border-accent-1 hover:bg-red-50 transition-colors duration-300 ease-in-out"
               title="Update Food Item"

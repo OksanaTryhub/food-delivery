@@ -206,14 +206,14 @@ const ItemList = () => {
                     <p>{item.price}</p>
                     <div className="flex justify-between px-4">
                       <button
-                        className=" flex hover:text-green-500 cursor-pointer justify-center "
+                        className=" flexcursor-pointer justify-center  "
                         onClick={() => updateFoodItem(item._id)}
                         title="Update Food Item"
                       >
-                        <GrUpdate />
+                        <GrUpdate className="hover:text-green-500 hover:rotate-180 transition-rotate transition-color duration-500 ease-in-out" />
                       </button>
                       <button
-                        className=" flex hover:text-accent-1 cursor-pointer justify-center "
+                        className=" flex cursor-pointer justify-center hover:text-accent-1 transition-color duration-300 ease-in-out "
                         onClick={() => showDeleteModal(item._id)}
                         title="Delete Food Item"
                       >

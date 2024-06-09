@@ -93,8 +93,8 @@ const AddItem = () => {
                   className="max-w-[220px}"
                 />
               ) : (
-                <div className="flex flex-col max-w-[220px] items-center justify-center h-40">
-                  <FaCloudUploadAlt className="text-4xl  text-gray-400" />
+                <div className="flex flex-col max-w-[220px] items-center justify-center h-40 hover:scale-110 transition-scale duration-500 ease-in-out">
+                  <FaCloudUploadAlt className="text-4xl  text-gray-400 " />
                   Upload
                 </div>
               )}

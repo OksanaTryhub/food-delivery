@@ -36,14 +36,14 @@ const FoodItemDetails = ({ isOpen, item, updateFoodItem, removeFoodItem }) => {
         </div>
         <div className="flex justify-between self-center sm:self-end p-4 sm:pr-8 sm:pb-8 w-[50%] sm:w-[25%]">
           <button
-            className=" flex hover:text-green-500 cursor-pointer justify-center text-lg "
+            className=" flex cursor-pointer justify-center text-lg "
             onClick={updateFoodItem}
             title="Update Food Item"
           >
-            <GrUpdate />
+            <GrUpdate className="hover:text-green-500 hover:rotate-180 transition-rotate transition-color duration-500 ease-in-out" />
           </button>
           <button
-            className=" flex hover:text-accent-1 cursor-pointer justify-center text-lg "
+            className=" flex hover:text-accent-1 transition-color duration-300 ease-in-out cursor-pointer justify-center text-lg "
             onClick={removeFoodItem}
             title="Delete Food Item"
           >

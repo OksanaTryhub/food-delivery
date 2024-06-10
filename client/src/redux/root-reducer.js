@@ -6,9 +6,9 @@ import authReducer from "./auth/auth-slice";
 import foodReducer from "./food/food-slice";
 
 const authPersistConfig = {
-  key: "token",
+  key: "food-user",
   storage,
-  whitelist: ["token", "isLogin"],
+  whitelist: ["token"],
 };
 
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);

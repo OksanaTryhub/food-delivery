@@ -12,7 +12,7 @@ const test = async (req, res) => {
   res.send("Hello User test");
 };
 
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
   const { username, password, email } = req.body;
 
   const isUserExists = await User.findOne({ email });
@@ -45,7 +45,7 @@ const registerUser = async (req, res) => {
   res.status(201).json({ success: true, token, user: rest });
 };
 
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
 
   const validUser = await User.findOne({ email });
@@ -103,9 +103,18 @@ const deleteUser = async (req, res, next) => {
 };
 
 const currentUser = async (req, res, next) => {
-  const { password: pass, ...rest } = req.user._doc;
+  const { password: pass, token, ...rest } = req.user._doc;
 
-  res.json(rest);
+  res.json({ success: true, token, user: rest });
+};
+
+const logoutUser = async (req, res, next) => {
+  const { _id } = req.user;
+
+  await User.findByIdAndUpdate(_id, { token: "" }, { new: true });
+  const { password: pas, token: tok, ...rest } = req.user._doc;
+
+  res.json({ rest, message: "User has been logged out!" });
 };
 
 export default {
@@ -115,4 +124,5 @@ export default {
   updateUser: ctrlWrapper(updateUser),
   deleteUser: ctrlWrapper(deleteUser),
   currentUser: ctrlWrapper(currentUser),
+  logoutUser: ctrlWrapper(logoutUser),
 };

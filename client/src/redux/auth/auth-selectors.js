@@ -1,6 +1,5 @@
 export const getUser = ({ authUser }) => authUser.user;
-export const getToken = ({ authUser }) => authUser.success;
-export const isSuccess = ({ authUser }) => authUser.success;
+export const getUserToken = ({ authUser }) => authUser.success;
 export const isUserLogin = ({ authUser }) => authUser.isLogin;
-export const isLoading = ({ authUser }) => authUser.loading;
-export const isError = ({ authUser }) => authUser.error;
+export const isUserLoading = ({ authUser }) => authUser.loading;
+export const isUserError = ({ authUser }) => authUser.error;

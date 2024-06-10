@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import Modal from "./Modal";
 import { IoClose } from "react-icons/io5";
 import PropTypes from "prop-types";
-import Modal from "./Modal";
+import { userLogin, userSignup } from "../redux/auth/auth-operations";
 
 const LoginPopup = ({ isOpen }) => {
   const [currState, setCurrState] = useState("sign-up");
@@ -10,6 +12,14 @@ const LoginPopup = ({ isOpen }) => {
     email: "",
     password: "",
   });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.body.classList.add("overflow-hidden");
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, []);
 
   const onChangeHandler = (e) => {
     const name = e.target.name;
@@ -19,7 +29,15 @@ const LoginPopup = ({ isOpen }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("🚀 ~ LoginPopup ~ data:", data);
+    try {
+      if (currState === "sign-up") {
+        dispatch(userSignup(data));
+      } else {
+        dispatch(userLogin({ email: data.email, password: data.password }));
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -47,9 +65,9 @@ const LoginPopup = ({ isOpen }) => {
           {currState === "sign-up" ? (
             <input
               type="text"
-              name="name"
+              name="username"
               onChange={onChangeHandler}
-              value={data.name}
+              value={data.username}
               placeholder="Name"
               required
               className="focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 p-2 rounded-lg border "

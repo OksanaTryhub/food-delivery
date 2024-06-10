@@ -76,6 +76,7 @@ const authSlice = createSlice({
         state.isLogin = true;
       })
       .addCase(adminCurrent.rejected, (state, { payload }) => {
+        state.token = "";
         handleRejected(state, payload);
       });
   },

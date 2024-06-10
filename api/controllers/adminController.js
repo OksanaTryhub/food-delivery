@@ -84,9 +84,9 @@ const logoutAdmin = async (req, res, next) => {
 };
 
 const getCurrentAdmin = async (req, res, next) => {
-  const { password: pass, ...rest } = req.user._doc;
+  const { password: pass, token, ...rest } = req.user._doc;
 
-  res.json(rest);
+  res.json({ success: true, admin: rest, token });
 };
 
 const updateAdmin = async (req, res, next) => {

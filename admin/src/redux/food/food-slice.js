@@ -13,56 +13,62 @@ const initialState = {
   error: null,
 };
 
+const handlePending = (state) => {
+  state.loading = true;
+  state.error = null;
+};
+
+const handleRejected = (state, { payload }) => {
+  state.loading = false;
+  state.error = payload;
+};
+
 const foodSlice = createSlice({
   name: "food",
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(fetchFood.pending, (store) => {
-        store.loading = true;
+      .addCase(fetchFood.pending, (state) => {
+        handlePending(state);
       })
-      .addCase(fetchFood.fulfilled, (store, { payload }) => {
-        store.loading = false;
-        store.items = payload.data;
+      .addCase(fetchFood.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.items = payload.data;
       })
-      .addCase(fetchFood.rejected, (store) => {
-        store.loading = false;
-        store.error = true;
+      .addCase(fetchFood.rejected, (state, { payload }) => {
+        handleRejected(state, payload);
       })
-      .addCase(fetchAddFoodItem.pending, (store) => {
-        store.loading = true;
+      .addCase(fetchAddFoodItem.pending, (state) => {
+        handlePending(state);
       })
-      .addCase(fetchAddFoodItem.fulfilled, (store, { payload }) => {
-        store.loading = false;
-        store.items.push(payload);
+      .addCase(fetchAddFoodItem.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.items.push(payload);
       })
-      .addCase(fetchAddFoodItem.rejected, (store, { payload }) => {
-        store.loading = false;
-        store.error = payload;
+      .addCase(fetchAddFoodItem.rejected, (state, { payload }) => {
+        handleRejected(state, payload);
       })
-      .addCase(fetchDeleteFoodItem.pending, (store) => {
-        store.loading = true;
+      .addCase(fetchDeleteFoodItem.pending, (state) => {
+        handlePending(state);
       })
-      .addCase(fetchDeleteFoodItem.fulfilled, (store, { payload }) => {
-        store.loading = false;
-        const index = store.items.findIndex((item) => item.id === payload);
-        store.items.splice(index, 1);
+      .addCase(fetchDeleteFoodItem.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        const index = state.items.findIndex((item) => item.id === payload);
+        state.items.splice(index, 1);
       })
-      .addCase(fetchDeleteFoodItem.rejected, (store, { payload }) => {
-        store.loading = false;
-        store.error = payload;
+      .addCase(fetchDeleteFoodItem.rejected, (state, { payload }) => {
+        handleRejected(state, payload);
       })
-      .addCase(fetchUpdateFoodItem.pending, (store) => {
-        store.loading = true;
+      .addCase(fetchUpdateFoodItem.pending, (state) => {
+        handlePending(state);
       })
-      .addCase(fetchUpdateFoodItem.fulfilled, (store, { payload }) => {
-        store.loading = false;
-        const index = store.items.findIndex((item) => item.id === payload._id);
-        store.items[index] = payload.updatedItem;
+      .addCase(fetchUpdateFoodItem.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        const index = state.items.findIndex((item) => item.id === payload._id);
+        state.items[index] = payload.updatedItem;
       })
-      .addCase(fetchUpdateFoodItem.rejected, (store, { payload }) => {
-        store.loading = false;
-        store.error = payload;
+      .addCase(fetchUpdateFoodItem.rejected, (state, { payload }) => {
+        handleRejected(state, payload);
       });
   },
 });

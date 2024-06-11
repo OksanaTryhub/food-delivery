@@ -1,25 +1,34 @@
-import { useContext, useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
+
+import { isUserLogin } from "./../redux/auth/auth-selectors";
+import { getCartItems } from "../redux/cart/cart-selectors";
+
+import LoginPopup from "./LoginPopup";
+import BurgerMenu from "./BurgerMenu";
+import UserMenu from "./UserMenu";
+
+import logo from "../assets/images/logo.png";
 import { FaSearch, FaBars } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { IoLogoOctocat } from "react-icons/io5";
-import logo from "../assets/images/logo.png";
-import LoginPopup from "./LoginPopup";
-import BurgerMenu from "./BurgerMenu";
-import { StoreContext } from "../context/StoreContext";
-import { useSelector } from "react-redux";
-import { isUserLogin } from "./../redux/auth/auth-selectors";
-import UserMenu from "./UserMenu";
 
 const Header = () => {
   const [activeItem, setActiveItem] = useState("home");
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showBurger, setShowBurger] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [totalItemsQuantity, setTotalItemsQuantity] = useState(0);
   const isLogin = useSelector(isUserLogin);
+  const cartData = useSelector(getCartItems);
   const location = useLocation();
-  const { getTotalCartAmount, getTotalItemsQuantity } =
-    useContext(StoreContext);
+
+  useEffect(() => {
+    setTotalItemsQuantity(
+      Object.values(cartData).reduce((acc, value) => acc + value, 0)
+    );
+  }, [cartData]);
 
   const handleShowBurger = () => {
     setShowBurger(true);
@@ -47,15 +56,6 @@ const Header = () => {
           <nav>
             {location.pathname === "/" && (
               <ul className="hidden md:flex gap-4 ">
-                <Link
-                  to="/"
-                  className={`cursor-pointer hover:text-accent-1 ${
-                    activeItem === "home" ? "underline underline-custom" : ""
-                  }`}
-                  onClick={() => setActiveItem("home")}
-                >
-                  Home
-                </Link>
                 <a
                   href="#explore-menu"
                   className={`cursor-pointer hover:text-accent-1 ${
@@ -90,24 +90,24 @@ const Header = () => {
               </ul>
             )}
           </nav>
-          <div className="flex gap-4 sm:gap-8 pr-4 items-center">
+          <div className="flex gap-1 sm:gap-4 pr-4 items-center">
             <FaSearch className="text-[22px] cursor-pointer hover:text-accent-1" />
             <div className="relative">
-              <Link to="/cart">
+              <Link to="/cart" className="inline-flex p-4">
                 <FaCartShopping className="text-2xl hover:text-accent-1" />
               </Link>
               <div
-                className={`w-4 h-4 bg-accent-1 rounded-full -top-2 -right-2 absolute flex items-center justify-center text-[10px] ${
-                  getTotalCartAmount() === 0 && "hidden"
+                className={`flex w-4 h-4 bg-accent-1 rounded-full top-1 right-1 absolute items-center justify-center text-[10px] ${
+                  !isLogin || totalItemsQuantity === 0 ? "hidden" : ""
                 }`}
               >
-                {getTotalItemsQuantity()}
+                {totalItemsQuantity}
               </div>
             </div>
             {isLogin ? (
               <div
                 onClick={handleShowModal}
-                className="bg-red-100 p-3 rounded-full text-3xl cursor-pointer"
+                className="hidden md:block bg-red-100 p-3 rounded-full text-3xl cursor-pointer"
               >
                 <IoLogoOctocat />
               </div>

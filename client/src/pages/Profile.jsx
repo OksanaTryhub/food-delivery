@@ -1,7 +1,9 @@
-import React from "react";
-
 const Profile = () => {
-  return <div className="p-[150px]">Profile</div>;
+  return (
+    <div className="inline-flex flex-col gap-10 p-[150px] items-center justify-center w-full">
+      Profile
+    </div>
+  );
 };
 
 export default Profile;

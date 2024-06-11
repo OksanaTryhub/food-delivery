@@ -1,30 +1,64 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { StoreContext } from "../context/StoreContext";
 import CartTotals from "../components/CartTotals";
 import EmptyCart from "../components/EmptyCart";
 import CartItemsList from "../components/CartItemsList";
+import { useDispatch, useSelector } from "react-redux";
+
+import { getCartItems, isCartError } from "./../redux/cart/cart-selectors";
+import { getFood } from "../redux/food/food-selectors";
+import Loader from "../components/Loader";
+import {
+  fetchAddToCart,
+  fetchDeleteFromCart,
+} from "./../redux/cart/cart-operations";
 
 const Cart = () => {
-  const {
-    cartItems,
-    foodList,
-    removeFromCart,
-    reduceItemQuantity,
-    addToCart,
-    getTotalCartAmount,
-    clearCart,
-    getTotalItemsQuantity,
-  } = useContext(StoreContext);
+  const [dataFetched, setDataFetched] = useState(false);
+  const [totalQuantity, setTotalQuantity] = useState(0);
+  const { removeFromCart, getTotalCartAmount, clearCart } =
+    useContext(StoreContext);
 
+  const foodList = useSelector(getFood);
+  const cartItems = useSelector(getCartItems);
+  const isError = useSelector(isCartError);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (cartItems) {
+      setDataFetched(true);
+      setTotalQuantity(
+        Object.values(cartItems).reduce((acc, value) => acc + value, 0)
+      );
+    }
+  }, [cartItems]);
+
+  const addToCart = async (id) => {
+    try {
+      await dispatch(fetchAddToCart(id));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const reduceItem = async (id) => {
+    try {
+      await dispatch(fetchDeleteFromCart(id));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  if (!dataFetched && !isError) {
+    <Loader />;
+  }
 
   return (
-    <section>
+    <section className="pt-[100px]">
       <div className="container flex flex-col mx-auto p-3">
-        {!getTotalItemsQuantity() ? (
-          <EmptyCart />
-        ) : (
+        {dataFetched && totalQuantity > 0 ? (
           <>
             <div className="grid grid-cols-cartItemXS sm:grid-cols-cartItem p-3  text-lg text-gray-400">
               <p className="pl-2">Items</p>
@@ -42,7 +76,7 @@ const Cart = () => {
               foodList={foodList}
               cartItems={cartItems}
               removeFromCart={removeFromCart}
-              reduceItemQuantity={reduceItemQuantity}
+              reduceItem={reduceItem}
               addToCart={addToCart}
               clearCart={clearCart}
             />
@@ -53,6 +87,8 @@ const Cart = () => {
               CONTINUE CHOOSING FOOD
             </button>
           </>
+        ) : (
+          <EmptyCart />
         )}
 
         <div className="flex flex-col-reverse sm:flex-row sm:gap-20 mt-10 sm:mt-20 gap-10">

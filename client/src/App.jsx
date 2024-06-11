@@ -25,13 +25,13 @@ export default function App() {
               <Header />
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="*" element={<NotFound />} />
 
                 <Route element={<PrivateRoute />}>
                   <Route path="/cart" element={<Cart />} />
                   <Route path="/order" element={<PlaceOrder />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/orders" element={<Orders />} />
-                  <Route path="*" element={<NotFound />} />
                 </Route>
               </Routes>
             </Layout>

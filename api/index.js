@@ -6,6 +6,7 @@ import { connectDB } from "./config/db.js";
 import foodRouter from "./routes/foodRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import adminRouter from "./routes/adminRoutes.js";
+import cartRouter from "./routes/cartRoutes.js";
 
 dotenv.config();
 const { PORT } = process.env;
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use("/api/food", foodRouter);
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/cart", cartRouter);
 
 app.use("/admin", express.static(path.join(__dirname, "/admin/dist")));
 app.use("/", express.static(path.join(__dirname, "/client/dist")));
@@ -30,7 +32,11 @@ app.get("*", (req, res, next) => {
   const url = req.url;
   if (url.startsWith("/admin")) {
     res.sendFile(path.join(__dirname, "admin", "dist", "index.html"));
-  } else if (url.startsWith("/food") || url.startsWith("/user")) {
+  } else if (
+    url.startsWith("/food") ||
+    url.startsWith("/cart") ||
+    url.startsWith("/user")
+  ) {
     console.log(url);
     res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
   } else next();

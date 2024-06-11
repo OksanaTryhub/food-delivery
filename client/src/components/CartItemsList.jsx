@@ -7,7 +7,7 @@ const CartItemsList = ({
   foodList,
   cartItems,
   removeFromCart,
-  reduceItemQuantity,
+  reduceItem,
   addToCart,
   clearCart,
 }) => {
@@ -25,7 +25,7 @@ const CartItemsList = ({
                 quantity={cartItems[item._id]}
                 total={item.price * cartItems[item._id]}
                 removeItem={() => removeFromCart(item._id)}
-                reduceItem={() => reduceItemQuantity(item._id)}
+                reduceItem={() => reduceItem(item._id)}
                 addItem={() => addToCart(item._id)}
                 className="hidden sm:grid"
               />
@@ -60,7 +60,7 @@ CartItemsList.propTypes = {
   foodList: PropTypes.array.isRequired,
   cartItems: PropTypes.object.isRequired,
   removeFromCart: PropTypes.func.isRequired,
-  reduceItemQuantity: PropTypes.func.isRequired,
+  reduceItem: PropTypes.func.isRequired,
   addToCart: PropTypes.func.isRequired,
   clearCart: PropTypes.func.isRequired,
 };

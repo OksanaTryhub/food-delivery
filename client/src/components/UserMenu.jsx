@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { userLogout } from "../redux/auth/auth-operations";
 import { getUserToken } from "../redux/auth/auth-selectors";
 import Modal from "./Modal";
-import { FaListCheck } from "react-icons/fa6";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { LuLogOut } from "react-icons/lu";
 import { TbShoppingBagCheck } from "react-icons/tb";

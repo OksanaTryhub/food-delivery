@@ -8,7 +8,6 @@ export const userSignup = createAsyncThunk(
       const result = await api.signupUser(data);
       return result;
     } catch ({ response }) {
-      console.log(response);
       return rejectWithValue(response);
     }
   }
@@ -21,7 +20,6 @@ export const userLogin = createAsyncThunk(
       const result = await api.loginUser(data);
       return result;
     } catch ({ response }) {
-      console.log(response);
       return rejectWithValue(response);
     }
   }
@@ -34,7 +32,6 @@ export const userLogout = createAsyncThunk(
       const result = await api.logoutUser(token);
       return result;
     } catch ({ response }) {
-      console.log(response);
       return rejectWithValue(response);
     }
   }
@@ -48,8 +45,7 @@ export const userCurrent = createAsyncThunk(
       const result = await api.getCurrentUser(authUser.token);
       return result;
     } catch ({ response }) {
-      console.log(response);
-      return rejectWithValue(response);
+      return rejectWithValue(response.data);
     }
   }
 );

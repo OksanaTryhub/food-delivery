@@ -8,6 +8,8 @@ import {
   isUserLogin,
 } from "../redux/auth/auth-selectors";
 import Loader from "./Loader";
+import { fetchFood } from "../redux/food/food-operations";
+import { fetchCartData } from "../redux/cart/cart-operations";
 
 const AuthLayout = ({ children }) => {
   const isLogin = useSelector(isUserLogin);
@@ -17,7 +19,17 @@ const AuthLayout = ({ children }) => {
 
   useEffect(() => {
     dispatch(userCurrent());
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchFood());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isLogin) {
+      dispatch(fetchCartData());
+    }
+  }, [dispatch, isLogin]);
 
   if (loading && !isLogin && !error) {
     return (

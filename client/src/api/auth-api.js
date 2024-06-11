@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export const instance = axios.create({
-  // baseURL: "https://food-delivery-mern-bhpe.onrender.com/api",
-  baseURL: "http://localhost:3000/api",
+  baseURL: "https://food-delivery-mern-bhpe.onrender.com/api",
+  // baseURL: "http://localhost:3000/api",
 });
 
 export const setTokenUser = (token) => {

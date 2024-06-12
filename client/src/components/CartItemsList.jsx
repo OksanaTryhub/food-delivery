@@ -35,7 +35,7 @@ const CartItemsList = ({
                 name={item.name}
                 quantity={cartItems[item._id]}
                 total={item.price * cartItems[item._id]}
-                reduceItem={() => reduceItemQuantity(item._id)}
+                reduceItem={() => reduceItem(item._id)}
                 addItem={() => addToCart(item._id)}
                 className="grid sm:hidden"
               />

@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
 import { isUserLogin } from "./../redux/auth/auth-selectors";
 import { getCartTotalQuantity } from "../redux/cart/cart-selectors";
+import { getLocalCartTotalQuantity } from "../redux/cart/localCart-selectors";
 
 import LoginPopup from "./LoginPopup";
 import BurgerMenu from "./BurgerMenu";
@@ -15,13 +16,25 @@ import { FaCartShopping } from "react-icons/fa6";
 import { IoLogoOctocat } from "react-icons/io5";
 
 const Header = () => {
+  const [cartQuantity, setCartQuantity] = useState(0);
   const [activeItem, setActiveItem] = useState("home");
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showBurger, setShowBurger] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const isLogin = useSelector(isUserLogin);
   const totalItemsQuantity = useSelector(getCartTotalQuantity);
+  const totalLocalItemsQuantity = useSelector(getLocalCartTotalQuantity);
   const location = useLocation();
+
+  useEffect(() => {
+    if (!isLogin && totalLocalItemsQuantity > 0) {
+      setCartQuantity(totalLocalItemsQuantity);
+    } else if (isLogin && totalItemsQuantity > 0) {
+      setCartQuantity(totalItemsQuantity);
+    } else {
+      setCartQuantity(0);
+    }
+  }, [isLogin, totalItemsQuantity, totalLocalItemsQuantity]);
 
   const handleShowBurger = () => {
     setShowBurger(true);
@@ -91,10 +104,10 @@ const Header = () => {
               </Link>
               <div
                 className={`flex w-4 h-4 bg-accent-1 rounded-full top-1 right-1 absolute items-center justify-center text-[10px] ${
-                  totalItemsQuantity === 0 ? "hidden" : ""
+                  cartQuantity === 0 ? "hidden" : ""
                 }`}
               >
-                {totalItemsQuantity}
+                {cartQuantity}
               </div>
             </div>
             {isLogin ? (

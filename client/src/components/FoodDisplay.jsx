@@ -13,19 +13,76 @@ import FoodItem from "./FoodItem";
 import Loader from "./Loader.jsx";
 import { FaCartShopping } from "react-icons/fa6";
 import {
-  fetchAddToCart,
-  fetchDeleteFromCart,
+  fetchAddItemToCart,
+  fetchDecreaseCartItemQuantity,
+  updateCartFromLocalStorage,
 } from "../redux/cart/cart-operations.js";
-import { addToCartLoc, deleteFromCartLoc } from "../redux/cart/cart-slice.js";
+import {
+  addToCartLoc,
+  clearCartLoc,
+  decreaseCartItemLoc,
+} from "../redux/cart/localCart-slice.js";
+import {
+  getLocalCartItems,
+  getLocalCartTotalQuantity,
+} from "../redux/cart/localCart-selectors.js";
+import { useEffect, useState } from "react";
 
 const FoodDisplay = ({ category }) => {
+  const [cartData, setCartData] = useState({});
+  const [cartQuantity, setCartQuantity] = useState(0);
+  const [cartUpdated, setCartUpdated] = useState(false);
   const isLogin = useSelector(isUserLogin);
   const foodList = useSelector(getFood);
-  const cartData = useSelector(getCartItems);
+  const cartItems = useSelector(getCartItems);
+  const localCartItems = useSelector(getLocalCartItems);
   const loading = useSelector(isLoading);
   const error = useSelector(isError);
   const totalItemsQuantity = useSelector(getCartTotalQuantity);
+  const totalLocalItemsQuantity = useSelector(getLocalCartTotalQuantity);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isLogin) {
+      if (localCartItems && Object.values(localCartItems).length > 0) {
+        dispatch(updateCartFromLocalStorage(localCartItems))
+          .then(() => {
+            localStorage.removeItem("localCart");
+            dispatch(clearCartLoc());
+            setCartUpdated(true);
+          })
+          .catch((error) => {
+            console.log("Error updating cart from local storage", error);
+          });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isLogin && !isEmpty(localCartItems)) {
+      setCartData(localCartItems);
+    } else if (!isLogin && isEmpty(localCartItems)) {
+      setCartData({});
+    } else if (isLogin && !isEmpty(cartItems)) {
+      setCartData(cartItems);
+    } else if (isLogin && isEmpty(cartItems)) {
+      setCartData({});
+    }
+  }, [isLogin, cartItems, localCartItems, cartUpdated]);
+
+  useEffect(() => {
+    if (!isLogin && totalLocalItemsQuantity > 0) {
+      setCartQuantity(totalLocalItemsQuantity);
+    } else if (isLogin && totalItemsQuantity > 0) {
+      setCartQuantity(totalItemsQuantity);
+    } else {
+      setCartQuantity(0);
+    }
+  }, [isLogin, totalItemsQuantity, totalLocalItemsQuantity]);
+
+  function isEmpty(object) {
+    return Object.keys(object).length === 0;
+  }
 
   const handleCartClick = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -36,7 +93,7 @@ const FoodDisplay = ({ category }) => {
       dispatch(addToCartLoc({ itemId: id }));
     } else {
       try {
-        await dispatch(fetchAddToCart(id));
+        await dispatch(fetchAddItemToCart(id));
       } catch (error) {
         console.log(error.message);
       }
@@ -45,10 +102,10 @@ const FoodDisplay = ({ category }) => {
 
   const removeFromCart = async (id) => {
     if (!isLogin) {
-      dispatch(deleteFromCartLoc({ itemId: id }));
+      dispatch(decreaseCartItemLoc({ itemId: id }));
     } else {
       try {
-        await dispatch(fetchDeleteFromCart(id));
+        await dispatch(fetchDecreaseCartItemQuantity(id));
       } catch (error) {
         console.log(error.message);
       }
@@ -64,17 +121,17 @@ const FoodDisplay = ({ category }) => {
       <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold px-3 mb-4">
         Top dishes near you
       </h1>
-      {totalItemsQuantity > 0 && (
+      {cartQuantity > 0 && (
         <div className="fixed bottom-5 right-5 sm:bottom-7 sm:right-10 lg:bottom-10 bg-red-100 p-5 rounded-full z-40">
           <Link to="/cart" onClick={handleCartClick}>
             <FaCartShopping className="text-3xl hover:text-accent-1" />
           </Link>
           <div
             className={`w-4 h-4 bg-accent-1 rounded-full top-3 right-3 absolute flex items-center justify-center text-[10px] ${
-              totalItemsQuantity === 0 && "hidden"
+              cartQuantity === 0 ? "hidden" : ""
             }`}
           >
-            {totalItemsQuantity}
+            {cartQuantity}
           </div>
         </div>
       )}

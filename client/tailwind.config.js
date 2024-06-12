@@ -25,7 +25,7 @@ export default {
         fadeIn: { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
       },
       animation: {
-        fadeIn: "fadeIn 1000ms ease-in-out",
+        fadeIn: "fadeIn 500ms ease-in-out",
       },
       cursor: {
         grab: "grab",

@@ -1,53 +1,112 @@
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { StoreContext } from "../context/StoreContext";
-import CartTotals from "../components/CartTotals";
-import EmptyCart from "../components/EmptyCart";
-import CartItemsList from "../components/CartItemsList";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {
   getCartItems,
-  getCartTotalQuantity,
   getTotalCartAmount,
   isCartError,
+  isCartLoading,
 } from "./../redux/cart/cart-selectors";
 import { getFood } from "../redux/food/food-selectors";
-import Loader from "../components/Loader";
-import {
-  fetchAddToCart,
-  fetchDeleteFromCart,
-} from "./../redux/cart/cart-operations";
 import { isUserLogin } from "../redux/auth/auth-selectors";
-import { addToCartLoc, deleteFromCartLoc } from "../redux/cart/cart-slice";
+import {
+  getLocalCartItems,
+  getTotalLocalCartAmount,
+} from "../redux/cart/localCart-selectors";
+
+import {
+  fetchAddItemToCart,
+  fetchClearCart,
+  fetchDecreaseCartItemQuantity,
+  fetchDeleteFromCart,
+  updateCartFromLocalStorage,
+} from "./../redux/cart/cart-operations";
+import {
+  addToCartLoc,
+  clearCartLoc,
+  decreaseCartItemLoc,
+  deleteItemCartLoc,
+} from "../redux/cart/localCart-slice";
+
+import CartTotals from "../components/CartTotals";
+import EmptyCart from "../components/EmptyCart";
+import CartItemsList from "../components/CartItemsList";
+import Loader from "../components/Loader";
 
 const Cart = () => {
-  const [dataFetched, setDataFetched] = useState(false);
-  const { removeFromCart, clearCart } = useContext(StoreContext);
-
-  const getTotalAmount = useSelector(getTotalCartAmount);
-
+  const [cartData, setCartData] = useState({});
+  const [cartUpdated, setCartUpdated] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const totalCartAmount = useSelector(getTotalCartAmount);
+  const totalLocalAmount = useSelector(getTotalLocalCartAmount);
   const isLogin = useSelector(isUserLogin);
   const foodList = useSelector(getFood);
+  const isLoading = useSelector(isCartLoading);
   const cartItems = useSelector(getCartItems);
-  console.log("🚀 ~ Cart ~ cartItems:", cartItems);
+  const localCartItems = useSelector(getLocalCartItems);
   const isError = useSelector(isCartError);
-  const totalQuantity = useSelector(getCartTotalQuantity);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (cartItems) {
-      setDataFetched(true);
+    if (isLogin) {
+      if (localCartItems && Object.values(localCartItems).length > 0) {
+        dispatch(updateCartFromLocalStorage(localCartItems))
+          .then(() => {
+            localStorage.removeItem("localCart");
+            dispatch(clearCartLoc());
+            setCartUpdated(true);
+          })
+          .catch((error) => {
+            console.log("Error updating cart from local storage", error);
+          });
+      }
     }
-  }, [cartItems]);
+  }, []);
+
+  useEffect(() => {
+    if (!isLogin && !isEmpty(localCartItems)) {
+      setCartData(localCartItems);
+    } else if (!isLogin && isEmpty(localCartItems)) {
+      setCartData({});
+    } else if (isLogin && !isEmpty(cartItems)) {
+      setCartData(cartItems);
+    } else if (isLogin && isEmpty(cartItems)) {
+      setCartData({});
+    }
+  }, [isLogin, cartItems, localCartItems, cartUpdated]);
+
+  useEffect(() => {
+    if (isEmpty(cartData)) {
+      setTotalAmount(0);
+    } else if (!isEmpty(localCartItems)) {
+      setTotalAmount(totalLocalAmount);
+    } else if (!isEmpty(cartItems)) {
+      setTotalAmount(totalCartAmount);
+    } else {
+      setTotalAmount(0);
+    }
+  }, [
+    isLogin,
+    cartItems,
+    localCartItems,
+    cartUpdated,
+    totalLocalAmount,
+    totalCartAmount,
+    cartData,
+  ]);
+
+  function isEmpty(object) {
+    return Object.keys(object).length === 0;
+  }
 
   const addToCart = async (id) => {
     if (!isLogin) {
       dispatch(addToCartLoc({ itemId: id }));
     } else {
       try {
-        await dispatch(fetchAddToCart(id));
+        await dispatch(fetchAddItemToCart(id));
       } catch (error) {
         console.log(error.message);
       }
@@ -56,24 +115,47 @@ const Cart = () => {
 
   const reduceItem = async (id) => {
     if (!isLogin) {
-      dispatch(deleteFromCartLoc({ itemId: id }));
+      dispatch(decreaseCartItemLoc({ itemId: id }));
     } else {
       try {
-        await dispatch(fetchDeleteFromCart(id));
+        await dispatch(fetchDecreaseCartItemQuantity(id));
       } catch (error) {
         console.log(error.message);
       }
     }
   };
 
-  if (!dataFetched && !isError) {
+  const removeFromCart = async (id) => {
+    if (!isLogin) {
+      dispatch(deleteItemCartLoc({ itemId: id }));
+    } else {
+      try {
+        await dispatch(fetchDeleteFromCart(id));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+  if (isLoading && !isError) {
     <Loader />;
   }
+
+  const clearCart = async () => {
+    if (!isLogin) {
+      dispatch(clearCartLoc());
+    } else {
+      try {
+        await dispatch(fetchClearCart());
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <section className="pt-[100px]">
       <div className="container flex flex-col mx-auto p-3">
-        {dataFetched && totalQuantity > 0 ? (
+        {Object.keys(cartData).length > 0 ? (
           <>
             <div className="grid grid-cols-cartItemXS sm:grid-cols-cartItem p-3  text-lg text-gray-400">
               <p className="pl-2">Items</p>
@@ -89,7 +171,7 @@ const Cart = () => {
             <hr />
             <CartItemsList
               foodList={foodList}
-              cartItems={cartItems}
+              cartItems={cartData}
               removeFromCart={removeFromCart}
               reduceItem={reduceItem}
               addToCart={addToCart}
@@ -108,7 +190,7 @@ const Cart = () => {
 
         <div className="flex flex-col-reverse sm:flex-row sm:gap-20 mt-10 sm:mt-20 gap-10">
           <CartTotals
-            amount={getTotalAmount}
+            amount={totalAmount}
             buttonText={"PROCEED TO CHECKOUT"}
             onClick={() => navigate("/order")}
             className="flex-1"

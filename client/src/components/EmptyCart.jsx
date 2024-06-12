@@ -10,8 +10,11 @@ const EmptyCart = () => {
           OOPS, THERE&apos;S NOTHING!
         </p>
         <p className="text-xl font-semibold">
-          Your cart is empty, add something from the{" "}
-          <Link to="/" className="cursor-pointer hover:text-accent-1">
+          Your cart is empty, add something from{" "}
+          <Link
+            to="/"
+            className="cursor-pointer text-accent-1 hover:underline underline-custom"
+          >
             Menu
           </Link>
         </p>

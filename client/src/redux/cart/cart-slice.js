@@ -7,7 +7,7 @@ import {
 } from "./cart-operations";
 
 const initialState = {
-  cart: {},
+  cart: JSON.parse(localStorage.getItem("cart")) || {},
   loading: false,
   error: null,
 };
@@ -25,6 +25,24 @@ const handleRejected = (state, { payload }) => {
 const cartSlice = createSlice({
   name: "cart",
   initialState,
+  reducers: {
+    addToCartLoc(state, action) {
+      const { itemId } = action.payload;
+      if (!state.cart[itemId]) {
+        state.cart[itemId] = 1;
+      } else {
+        state.cart[itemId] += 1;
+      }
+      localStorage.setItem("cart", JSON.stringify(state.cart));
+    },
+    deleteFromCartLoc(state, action) {
+      const { itemId } = action.payload;
+      if (state.cart[itemId] && state.cart[itemId] > 0) {
+        state.cart[itemId] -= 1;
+      }
+      localStorage.setItem("cart", JSON.stringify(state.cart));
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAddToCart.pending, (state) => {
@@ -61,4 +79,5 @@ const cartSlice = createSlice({
   },
 });
 
+export const { addToCartLoc, deleteFromCartLoc } = cartSlice.actions;
 export default cartSlice.reducer;

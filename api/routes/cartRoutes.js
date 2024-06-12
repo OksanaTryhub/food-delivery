@@ -5,9 +5,16 @@ import authenticate from "../middlewares/authenticate.js";
 
 const router = express.Router();
 
-router.get("/test", authenticate("user"), ctrl.cartTest);
-router.post("/add", authenticate("user"), ctrl.addToCart);
-router.post("/delete", authenticate("user"), ctrl.removeFromCart);
+router.post("/add", authenticate("user"), ctrl.addItemToCart);
+router.post("/update-cart", authenticate("user"), ctrl.updateCartData);
+router.post("/delete", authenticate("user"), ctrl.decreaseCartItemQuantity);
+router.delete(
+  "/delete/:id",
+  authenticate("user"),
+  isValidId,
+  ctrl.deleteCartItem
+);
+router.delete("/clear-cart", authenticate("user"), ctrl.clearCart);
 router.get("/", authenticate("user"), ctrl.getCartData);
 
 export default router;

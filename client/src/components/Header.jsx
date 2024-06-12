@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
 import { isUserLogin } from "./../redux/auth/auth-selectors";
-import { getCartItems } from "../redux/cart/cart-selectors";
+import { getCartTotalQuantity } from "../redux/cart/cart-selectors";
 
 import LoginPopup from "./LoginPopup";
 import BurgerMenu from "./BurgerMenu";
@@ -19,16 +19,9 @@ const Header = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showBurger, setShowBurger] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [totalItemsQuantity, setTotalItemsQuantity] = useState(0);
   const isLogin = useSelector(isUserLogin);
-  const cartData = useSelector(getCartItems);
+  const totalItemsQuantity = useSelector(getCartTotalQuantity);
   const location = useLocation();
-
-  useEffect(() => {
-    setTotalItemsQuantity(
-      Object.values(cartData).reduce((acc, value) => acc + value, 0)
-    );
-  }, [cartData]);
 
   const handleShowBurger = () => {
     setShowBurger(true);
@@ -98,7 +91,7 @@ const Header = () => {
               </Link>
               <div
                 className={`flex w-4 h-4 bg-accent-1 rounded-full top-1 right-1 absolute items-center justify-center text-[10px] ${
-                  !isLogin || totalItemsQuantity === 0 ? "hidden" : ""
+                  totalItemsQuantity === 0 ? "hidden" : ""
                 }`}
               >
                 {totalItemsQuantity}

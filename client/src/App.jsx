@@ -26,10 +26,10 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="*" element={<NotFound />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/order" element={<PlaceOrder />} />
 
                 <Route element={<PrivateRoute />}>
-                  <Route path="/cart" element={<Cart />} />
-                  <Route path="/order" element={<PlaceOrder />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/orders" element={<Orders />} />
                 </Route>

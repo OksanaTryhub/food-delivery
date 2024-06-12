@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import { isUserLogin } from "../redux/auth/auth-selectors.js";
 import { getFood, isLoading, isError } from "../redux/food/food-selectors.js";
-import { getCartItems } from "../redux/cart/cart-selectors.js";
+import {
+  getCartItems,
+  getCartTotalQuantity,
+} from "../redux/cart/cart-selectors.js";
 
 import FoodItem from "./FoodItem";
 import Loader from "./Loader.jsx";
@@ -14,39 +16,42 @@ import {
   fetchAddToCart,
   fetchDeleteFromCart,
 } from "../redux/cart/cart-operations.js";
+import { addToCartLoc, deleteFromCartLoc } from "../redux/cart/cart-slice.js";
 
 const FoodDisplay = ({ category }) => {
-  const [totalItemsQuantity, setTotalItemsQuantity] = useState(0);
   const isLogin = useSelector(isUserLogin);
   const foodList = useSelector(getFood);
   const cartData = useSelector(getCartItems);
   const loading = useSelector(isLoading);
   const error = useSelector(isError);
+  const totalItemsQuantity = useSelector(getCartTotalQuantity);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    setTotalItemsQuantity(
-      Object.values(cartData).reduce((acc, value) => acc + value, 0)
-    );
-  }, [cartData]);
 
   const handleCartClick = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const addToCart = async (id) => {
-    try {
-      await dispatch(fetchAddToCart(id));
-    } catch (error) {
-      console.log(error.message);
+    if (!isLogin) {
+      dispatch(addToCartLoc({ itemId: id }));
+    } else {
+      try {
+        await dispatch(fetchAddToCart(id));
+      } catch (error) {
+        console.log(error.message);
+      }
     }
   };
 
   const removeFromCart = async (id) => {
-    try {
-      await dispatch(fetchDeleteFromCart(id));
-    } catch (error) {
-      console.log(error.message);
+    if (!isLogin) {
+      dispatch(deleteFromCartLoc({ itemId: id }));
+    } else {
+      try {
+        await dispatch(fetchDeleteFromCart(id));
+      } catch (error) {
+        console.log(error.message);
+      }
     }
   };
 
@@ -59,7 +64,7 @@ const FoodDisplay = ({ category }) => {
       <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold px-3 mb-4">
         Top dishes near you
       </h1>
-      {isLogin && totalItemsQuantity > 0 && (
+      {totalItemsQuantity > 0 && (
         <div className="fixed bottom-5 right-5 sm:bottom-7 sm:right-10 lg:bottom-10 bg-red-100 p-5 rounded-full z-40">
           <Link to="/cart" onClick={handleCartClick}>
             <FaCartShopping className="text-3xl hover:text-accent-1" />

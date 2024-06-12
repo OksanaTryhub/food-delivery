@@ -6,48 +6,63 @@ import EmptyCart from "../components/EmptyCart";
 import CartItemsList from "../components/CartItemsList";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getCartItems, isCartError } from "./../redux/cart/cart-selectors";
+import {
+  getCartItems,
+  getCartTotalQuantity,
+  getTotalCartAmount,
+  isCartError,
+} from "./../redux/cart/cart-selectors";
 import { getFood } from "../redux/food/food-selectors";
 import Loader from "../components/Loader";
 import {
   fetchAddToCart,
   fetchDeleteFromCart,
 } from "./../redux/cart/cart-operations";
+import { isUserLogin } from "../redux/auth/auth-selectors";
+import { addToCartLoc, deleteFromCartLoc } from "../redux/cart/cart-slice";
 
 const Cart = () => {
   const [dataFetched, setDataFetched] = useState(false);
-  const [totalQuantity, setTotalQuantity] = useState(0);
-  const { removeFromCart, getTotalCartAmount, clearCart } =
-    useContext(StoreContext);
+  const { removeFromCart, clearCart } = useContext(StoreContext);
 
+  const getTotalAmount = useSelector(getTotalCartAmount);
+
+  const isLogin = useSelector(isUserLogin);
   const foodList = useSelector(getFood);
   const cartItems = useSelector(getCartItems);
+  console.log("🚀 ~ Cart ~ cartItems:", cartItems);
   const isError = useSelector(isCartError);
+  const totalQuantity = useSelector(getCartTotalQuantity);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (cartItems) {
       setDataFetched(true);
-      setTotalQuantity(
-        Object.values(cartItems).reduce((acc, value) => acc + value, 0)
-      );
     }
   }, [cartItems]);
 
   const addToCart = async (id) => {
-    try {
-      await dispatch(fetchAddToCart(id));
-    } catch (error) {
-      console.log(error.message);
+    if (!isLogin) {
+      dispatch(addToCartLoc({ itemId: id }));
+    } else {
+      try {
+        await dispatch(fetchAddToCart(id));
+      } catch (error) {
+        console.log(error.message);
+      }
     }
   };
 
   const reduceItem = async (id) => {
-    try {
-      await dispatch(fetchDeleteFromCart(id));
-    } catch (error) {
-      console.log(error.message);
+    if (!isLogin) {
+      dispatch(deleteFromCartLoc({ itemId: id }));
+    } else {
+      try {
+        await dispatch(fetchDeleteFromCart(id));
+      } catch (error) {
+        console.log(error.message);
+      }
     }
   };
 
@@ -93,7 +108,7 @@ const Cart = () => {
 
         <div className="flex flex-col-reverse sm:flex-row sm:gap-20 mt-10 sm:mt-20 gap-10">
           <CartTotals
-            amount={getTotalCartAmount()}
+            amount={getTotalAmount}
             buttonText={"PROCEED TO CHECKOUT"}
             onClick={() => navigate("/order")}
             className="flex-1"

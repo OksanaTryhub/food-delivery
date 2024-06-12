@@ -1,4 +1,4 @@
-export const getFood = (state) => state.food.food ?? [];
-export const isLoading = (state) => state.food.loading;
-export const isError = (state) => state.food.error;
-export const isSuccess = (state) => state.food.success;
+export const getFood = ({ food }) => food.food || [];
+export const isLoading = ({ food }) => food.loading;
+export const isError = ({ food }) => food.error;
+export const isSuccess = ({ food }) => food.success;
